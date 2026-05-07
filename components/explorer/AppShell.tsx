@@ -92,7 +92,7 @@ export function AppShell({
     <div id="main-content" className="relative h-[100dvh] w-full bg-bg-canvas">
       {/* Desktop layout (md+): three-column grid + timeline row */}
       <div className="hidden h-full flex-col md:flex">
-        <div className="grid min-h-0 flex-1 grid-cols-[64px_1fr_360px] overflow-hidden">
+        <div className="grid min-h-0 flex-1 grid-cols-[64px_1fr_minmax(260px,22vw)] overflow-hidden">
           <NavRail />
           <div className="relative overflow-hidden">
             {view === "galaxy" && (

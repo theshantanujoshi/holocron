@@ -113,14 +113,14 @@ export function DatapadDrawer({ entities, planetImages = null, personImages = nu
                   disabled={disabled}
                   onClick={() => setView(id)}
                   className={cn(
-                    "flex h-7 w-7 items-center justify-center rounded border transition-colors",
+                    "flex h-9 w-9 items-center justify-center rounded border transition-colors",
                     isActive
                       ? "border-accent-faint bg-accent-bg/40 text-fg-strong"
                       : "border-border-faint text-fg-muted hover:border-border-line hover:text-fg-primary",
                     disabled && "pointer-events-none opacity-30"
                   )}
                 >
-                  <Icon size={13} weight="regular" />
+                  <Icon size={16} weight="regular" />
                 </button>
               );
             })}

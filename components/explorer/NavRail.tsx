@@ -40,20 +40,20 @@ export function NavRail() {
         <div className="flex flex-col items-center gap-5">
           <Link
             href="/"
-            className="rounded-md p-2 text-fg-muted transition-colors hover:text-fg-primary"
+            className="rounded-md p-2.5 text-fg-muted transition-colors hover:text-fg-primary"
             aria-label="Back to landing"
           >
-            <CaretLeft size={16} weight="regular" />
+            <CaretLeft size={18} weight="regular" />
           </Link>
 
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="rounded-md border border-border-faint bg-bg-panel/40 p-2 text-fg-muted transition-colors hover:border-border-line hover:text-fg-primary"
+            className="rounded-md border border-border-faint bg-bg-panel/40 p-2.5 text-fg-muted transition-colors hover:border-border-line hover:text-fg-primary"
             aria-label="Open search"
             title="Search · /"
           >
-            <MagnifyingGlass size={16} weight="regular" />
+            <MagnifyingGlass size={18} weight="regular" />
           </button>
 
           <div role="separator" className="h-px w-6 bg-border-faint" />
@@ -69,13 +69,13 @@ export function NavRail() {
                 type="button"
                 onClick={() => setView(id)}
                 className={cn(
-                  "rounded-md p-2 transition-colors",
+                  "rounded-md p-2.5 transition-colors",
                   view === id
                     ? "bg-accent-bg/60 text-fg-strong"
                     : "text-fg-muted hover:bg-bg-panel/40 hover:text-fg-primary"
                 )}
               >
-                <Icon size={16} weight="regular" />
+                <Icon size={18} weight="regular" />
               </button>
             ))}
           </div>
@@ -89,7 +89,7 @@ export function NavRail() {
               startRoute();
             }}
             className={cn(
-              "rounded-md border p-2 transition-colors",
+              "rounded-md border p-2.5 transition-colors",
               routeActive
                 ? "border-accent/60 bg-accent-bg/50 text-fg-strong"
                 : "border-border-faint text-fg-muted hover:border-border-line hover:text-fg-primary"
@@ -98,7 +98,7 @@ export function NavRail() {
             aria-label="Plot a hyperspace route"
             title="Plot a hyperspace route · R"
           >
-            <Path size={16} weight="regular" />
+            <Path size={18} weight="regular" />
           </button>
 
           <button
@@ -125,7 +125,7 @@ export function NavRail() {
 
       {/* Mobile: horizontal mini-bar */}
       <nav
-        className="flex h-12 w-full items-center justify-between border-b border-border-faint bg-bg-canvas/80 px-3 backdrop-blur-md md:hidden"
+        className="flex h-14 w-full items-center justify-between border-b border-border-faint bg-bg-canvas/80 px-3 backdrop-blur-md md:hidden"
         aria-label="Holocron navigation"
       >
         <div className="flex items-center gap-1">
@@ -138,7 +138,7 @@ export function NavRail() {
           </Link>
 
           <div
-            className="flex items-center gap-1 overflow-x-auto"
+            className="flex items-center gap-2 overflow-x-auto"
             role="tablist"
             aria-label="View"
             style={{ scrollbarWidth: "none" }}
@@ -152,61 +152,50 @@ export function NavRail() {
                 type="button"
                 onClick={() => setView(id)}
                 className={cn(
-                  "flex flex-shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors",
+                  "flex flex-shrink-0 items-center gap-2 rounded-md px-3 py-2 transition-colors",
                   view === id
                     ? "bg-accent-bg/60 text-fg-strong"
                     : "text-fg-muted hover:bg-bg-panel/40 hover:text-fg-primary"
                 )}
               >
-                <Icon size={14} weight="regular" />
-                <span className="font-mono text-2xs uppercase tracking-[0.12em]">{label}</span>
+                <Icon size={16} weight="regular" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.12em]">{label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="rounded-md border border-border-faint bg-bg-panel/40 p-2 text-fg-muted transition-colors hover:border-border-line hover:text-fg-primary"
+            className="rounded-md border border-border-faint bg-bg-panel/40 p-2.5 text-fg-muted transition-colors hover:border-border-line hover:text-fg-primary"
             aria-label="Open search"
           >
-            <MagnifyingGlass size={14} weight="regular" />
+            <MagnifyingGlass size={16} weight="regular" />
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              if (view !== "galaxy") setView("galaxy");
-              startRoute();
-            }}
-            className={cn(
-              "rounded-md border p-2 transition-colors",
-              routeActive
-                ? "border-accent/60 bg-accent-bg/50 text-fg-strong"
-                : "border-border-faint bg-bg-panel/40 text-fg-muted hover:border-border-line hover:text-fg-primary"
-            )}
-            aria-pressed={routeActive}
-            aria-label="Plot a hyperspace route"
-          >
-            <Path size={14} weight="regular" />
-          </button>
-          <button
-            type="button"
-            onClick={toggleLegends}
-            className={cn(
-              "rounded-md border px-2 py-1.5 font-mono text-2xs uppercase tracking-[0.08em] transition-colors",
-              showLegends
-                ? "border-legends/50 bg-legends/10 text-legends"
-                : "border-border-faint text-fg-muted"
-            )}
-            aria-pressed={showLegends}
-            aria-label={showLegends ? "Legends layer on" : "Legends layer off"}
-          >
-            {showLegends ? "+ Legends" : "Legends"}
-          </button>
-          <AtlasToggle size="mini" />
-          <AudioToggle size="mini" />
+          
+          <div className="hidden items-center gap-2 sm:flex">
+            <button
+              type="button"
+              onClick={() => {
+                if (view !== "galaxy") setView("galaxy");
+                startRoute();
+              }}
+              className={cn(
+                "rounded-md border p-2.5 transition-colors",
+                routeActive
+                  ? "border-accent/60 bg-accent-bg/50 text-fg-strong"
+                  : "border-border-faint bg-bg-panel/40 text-fg-muted hover:border-border-line hover:text-fg-primary"
+              )}
+              aria-pressed={routeActive}
+              aria-label="Plot a hyperspace route"
+            >
+              <Path size={16} weight="regular" />
+            </button>
+            <AtlasToggle size="mini" />
+            <AudioToggle size="mini" />
+          </div>
         </div>
       </nav>
     </>
