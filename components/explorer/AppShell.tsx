@@ -7,6 +7,7 @@ import type { LineageGraph } from "@/lib/data/loadLineage";
 import type { PlanetImage } from "@/lib/data/loadPlanetImages";
 import type { PersonImage } from "@/lib/data/loadPersonImages";
 import { useSelection } from "@/lib/store";
+import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { GalaxyCanvas } from "@/components/galaxy/GalaxyCanvas";
 import { TimelineView } from "@/components/timeline/TimelineView";
@@ -56,6 +57,7 @@ export function AppShell({
   const startRoute = useSelection((s) => s.startRoute);
   const clearRoute = useSelection((s) => s.clearRoute);
   const routeMode = useSelection((s) => s.route.mode);
+  const crawlOpen = useSelection((s) => s.crawlOpen);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -122,12 +124,12 @@ export function AppShell({
             personImages={personImages}
           />
         </div>
-        <TimelineScrubber />
+        {!crawlOpen && <TimelineScrubber />}
       </div>
 
       {/* Mobile layout (< md): stacked column */}
       <div className="flex h-full flex-col md:hidden">
-        <NavRail />
+        {!crawlOpen && <NavRail />}
         <div className="relative min-h-0 flex-1 overflow-hidden">
           {view === "galaxy" && (
             <GalaxyCanvas
@@ -150,7 +152,7 @@ export function AppShell({
           )}
           {view === "lineage" && <LineagePlaceholder />}
         </div>
-        <TimelineScrubber />
+        {!crawlOpen && <TimelineScrubber />}
         <DatapadDrawer
           entities={entities}
           planetImages={planetImages}
