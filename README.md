@@ -1,12 +1,31 @@
 # Holocron
 
-The galaxy, indexed. Across space, time, and lineage.
+**The galaxy, indexed. Across space, time, and lineage.**
+
+[![Deploy](https://github.com/adhit-r/holocron/actions/workflows/deploy.yml/badge.svg)](https://github.com/adhit-r/holocron/actions/workflows/deploy.yml)
+[![Open Issues](https://img.shields.io/github/issues/adhit-r/holocron)](https://github.com/adhit-r/holocron/issues)
+[![Good first issues](https://img.shields.io/github/issues/adhit-r/holocron/good%20first%20issue?label=good%20first%20issue&color=7057ff)](https://github.com/adhit-r/holocron/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A unified explorer for the Star Wars universe. Four coupled views — a 3D galaxy, a temporal scrubber across 25,000 years of history, a Force-lineage graph, and an entity datapad — driven by a single shared selection state. Pick anything, see it everywhere.
 
-> Live: **https://adhit-r.github.io/holocron/**
+> **Live:** https://adhit-r.github.io/holocron/
 >
-> Repo: https://github.com/adhit-r/holocron
+> **Repo:** https://github.com/adhit-r/holocron
+>
+> **Contribute:** see [CONTRIBUTING.md](CONTRIBUTING.md). 20+ issues open, ~5 marked `good first issue`.
+
+## Contribute (read this first)
+
+We're actively looking for Star Wars fans who write code. The repo has 20+ open issues classified by `area`, `difficulty`, and topic so you can pick one that matches your taste.
+
+- **2 hours** → [`good first issue`](https://github.com/adhit-r/holocron/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22): lightsaber colors, Aurebesh tooltips, sequel-era planets, May the 4th takeover.
+- **A weekend** → intermediate: Force-ghost shader, era-aware faction classification, Story Mode "Rise of Vader," procedural climate shaders.
+- **A real challenge** → [`advanced`](https://github.com/adhit-r/holocron/issues?q=is%3Aissue+is%3Aopen+label%3Aadvanced): WebGPU 1M-particle starfield, hyperspace tunnel transition, WebXR mode, voice-driven cross-pivot, local LLM-driven entity descriptions.
+- **Pure GLSL** → [`area: shader`](https://github.com/adhit-r/holocron/issues?q=is%3Aissue+is%3Aopen+label%3A%22area%3A+shader%22).
+- **Lore expertise** → [`lore-heavy`](https://github.com/adhit-r/holocron/issues?q=is%3Aissue+is%3Aopen+label%3Alore-heavy).
+
+Local setup is in [CONTRIBUTING.md](CONTRIBUTING.md). Design language in [DESIGN.md](DESIGN.md). Roadmap in [ROADMAP.md](ROADMAP.md).
 
 ## What's inside
 
