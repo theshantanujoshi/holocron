@@ -1,0 +1,407 @@
+{
+  "builtAt": "2026-05-07T17:57:31.102Z",
+  "nodes": [
+    {
+      "id": "person/1",
+      "name": "Luke Skywalker",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/10",
+      "name": "Obi-Wan Kenobi",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/11",
+      "name": "Anakin Skywalker",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/14",
+      "name": "Han Solo",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/20",
+      "name": "Yoda",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/21",
+      "name": "Palpatine",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/22",
+      "name": "Boba Fett",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/32",
+      "name": "Qui-Gon Jinn",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/35",
+      "name": "Padmé Amidala",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/43",
+      "name": "Shmi Skywalker",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/44",
+      "name": "Darth Maul",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/5",
+      "name": "Leia Organa",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/51",
+      "name": "Mace Windu",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/58",
+      "name": "Plo Koon",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/6",
+      "name": "Owen Lars",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/64",
+      "name": "Luminara Unduli",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/65",
+      "name": "Barriss Offee",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/67",
+      "name": "Dooku",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/68",
+      "name": "Bail Prestor Organa",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/69",
+      "name": "Jango Fett",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/7",
+      "name": "Beru Whitesun lars",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/ahsoka-tano",
+      "name": "Ahsoka Tano",
+      "faction": "jedi_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/ben-solo",
+      "name": "Ben Solo",
+      "faction": "sith_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/darth-bane",
+      "name": "Darth Bane",
+      "faction": "sith_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/darth-malak",
+      "name": "Darth Malak",
+      "faction": "sith_order",
+      "canonicity": "legends",
+      "type": "person"
+    },
+    {
+      "id": "person/darth-plagueis",
+      "name": "Darth Plagueis",
+      "faction": "sith_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/darth-revan",
+      "name": "Darth Revan",
+      "faction": "sith_order",
+      "canonicity": "legends",
+      "type": "person"
+    },
+    {
+      "id": "person/depa-billaba",
+      "name": "Depa Billaba",
+      "faction": "jedi_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/ezra-bridger",
+      "name": "Ezra Bridger",
+      "faction": "jedi_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/kanan-jarrus",
+      "name": "Kanan Jarrus",
+      "faction": "jedi_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/mara-jade-skywalker",
+      "name": "Mara Jade Skywalker",
+      "faction": "jedi_order",
+      "canonicity": "legends",
+      "type": "person"
+    },
+    {
+      "id": "person/rey-skywalker",
+      "name": "Rey Skywalker",
+      "faction": "jedi_order",
+      "canonicity": "canon",
+      "type": "person"
+    },
+    {
+      "id": "person/snoke",
+      "name": "Snoke",
+      "faction": "sith_order",
+      "canonicity": "canon",
+      "type": "person"
+    }
+  ],
+  "edges": [
+    {
+      "source": "person/1",
+      "target": "person/ben-solo",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/1",
+      "target": "person/mara-jade-skywalker",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/1",
+      "target": "person/rey-skywalker",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/1",
+      "target": "person/5",
+      "kind": "sibling_of"
+    },
+    {
+      "source": "person/1",
+      "target": "person/mara-jade-skywalker",
+      "kind": "spouse_of"
+    },
+    {
+      "source": "person/10",
+      "target": "person/1",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/10",
+      "target": "person/11",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/11",
+      "target": "person/ahsoka-tano",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/11",
+      "target": "person/1",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/11",
+      "target": "person/5",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/11",
+      "target": "person/35",
+      "kind": "spouse_of"
+    },
+    {
+      "source": "person/14",
+      "target": "person/ben-solo",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/14",
+      "target": "person/5",
+      "kind": "spouse_of"
+    },
+    {
+      "source": "person/20",
+      "target": "person/1",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/20",
+      "target": "person/67",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/21",
+      "target": "person/11",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/21",
+      "target": "person/44",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/21",
+      "target": "person/67",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/21",
+      "target": "person/snoke",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/32",
+      "target": "person/10",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/35",
+      "target": "person/1",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/35",
+      "target": "person/5",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/43",
+      "target": "person/11",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/5",
+      "target": "person/rey-skywalker",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/5",
+      "target": "person/ben-solo",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/51",
+      "target": "person/depa-billaba",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/58",
+      "target": "person/ahsoka-tano",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/6",
+      "target": "person/7",
+      "kind": "spouse_of"
+    },
+    {
+      "source": "person/64",
+      "target": "person/65",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/67",
+      "target": "person/32",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/68",
+      "target": "person/5",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/69",
+      "target": "person/22",
+      "kind": "parent_of"
+    },
+    {
+      "source": "person/darth-bane",
+      "target": "person/darth-plagueis",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/darth-plagueis",
+      "target": "person/21",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/darth-revan",
+      "target": "person/darth-malak",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/depa-billaba",
+      "target": "person/kanan-jarrus",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/kanan-jarrus",
+      "target": "person/ezra-bridger",
+      "kind": "master_of"
+    },
+    {
+      "source": "person/snoke",
+      "target": "person/ben-solo",
+      "kind": "master_of"
+    }
+  ]
+}

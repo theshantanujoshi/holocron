@@ -1,0 +1,40 @@
+{
+  "builtAt": "2026-05-07T17:57:30.633Z",
+  "durationMs": 664,
+  "counts": {
+    "total": 260,
+    "invalid": 0,
+    "coordsMatched": 57,
+    "byType": {
+      "person": 82,
+      "planet": 60,
+      "ship": 36,
+      "vehicle": 39,
+      "species": 37,
+      "film": 6
+    },
+    "wars": 8,
+    "battles": 26
+  },
+  "sources": [
+    {
+      "id": "swapi",
+      "url": "https://swapi.info/api",
+      "license": "public-mirror"
+    },
+    {
+      "id": "parzivail",
+      "url": "https://raw.githubusercontent.com/parzivail/SWGalacticMap/master/planets.json",
+      "license": "community-data"
+    }
+  ],
+  "descriptionsEnriched": 192,
+  "descriptionsBuiltAt": "2026-05-07T18:06:06.215Z",
+  "warsBuiltAt": "2026-05-07T19:54:50.511Z",
+  "legendsContentAdded": 0,
+  "legendsFilmsAdded": 0,
+  "legendsComicsAdded": 0,
+  "legendsGamesAdded": 0,
+  "legendsClipLinksAttached": 6,
+  "legendsBuiltAt": "2026-05-07T19:54:51.050Z"
+}

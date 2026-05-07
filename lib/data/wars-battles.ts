@@ -1,0 +1,879 @@
+/**
+ * wars-battles.ts
+ *
+ * Hand-curated canonical Star Wars wars and battles dataset.
+ * All data sourced from Wookieepedia (https://starwars.fandom.com/wiki/).
+ *
+ * Year convention: negative = BBY (Before Battle of Yavin), positive = ABY.
+ * planetId values map to SWAPI planet IDs in data/build/kb.json.
+ * Planets absent from kb.json (e.g. Korriban, Malachor V, Exegol) → planetId null;
+ * the planet name appears in the summary instead.
+ *
+ * Planet ID reference (from data/build/kb.json):
+ *   planet/1  Tatooine      planet/9  Coruscant     planet/17 Felucia
+ *   planet/2  Alderaan      planet/10 Kamino        planet/21 Eriadu
+ *   planet/3  Yavin IV      planet/11 Geonosis      planet/22 Corellia
+ *   planet/4  Hoth          planet/12 Utapau         planet/25 Dantooine
+ *   planet/5  Dagobah       planet/13 Mustafar       planet/31 Mon Cala
+ *   planet/6  Bespin        planet/14 Kashyyyk       planet/33 Sullust
+ *   planet/7  Endor         planet/15 Polis Massa    planet/37 Ryloth
+ *   planet/8  Naboo         planet/16 Mygeeto        planet/60 Umbara
+ */
+
+import type { War, Battle } from "@/lib/schema";
+
+// ---------------------------------------------------------------------------
+// Wars
+// ---------------------------------------------------------------------------
+// https://starwars.fandom.com/wiki/Category:Wars
+
+export const WARS: War[] = [
+  {
+    // https://starwars.fandom.com/wiki/Old_Sith_Wars
+    id: "war/old-sith-wars",
+    name: "Old Sith Wars",
+    startYear: -5000,
+    endYear: -3500,
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Galactic Republic + Jedi Order" },
+      { factions: ["sith_order"], label: "Sith Empire" }
+    ],
+    theatrePlanetIds: ["planet/9", "planet/25"],
+    keyBattleIds: [
+      "battle/korriban-5000bby",
+      "battle/ruusan"
+    ],
+    summary:
+      "A series of devastating conflicts spanning 1,500 years between the Galactic Republic and recurring Sith Empires, ultimately ending with the Ruusan Reformation and the Sith adopting the Rule of Two.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Old_Sith_Wars"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Mandalorian_Wars
+    id: "war/mandalorian-wars",
+    name: "Mandalorian Wars",
+    startYear: -3976,
+    endYear: -3960,
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Galactic Republic + Revanchists" },
+      { factions: ["mandalorian"], label: "Mandalorian Neo-Crusaders" }
+    ],
+    theatrePlanetIds: ["planet/9", "planet/16"],
+    keyBattleIds: [
+      "battle/malachor-v",
+      "battle/malachor-v-bombardment"
+    ],
+    summary:
+      "Mandalorian Neo-Crusaders swept across the Outer Rim until Revan and Malak led a rogue Jedi faction to stop them; the war ended with the mass-shadow generator at Malachor V, devastating both fleets.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Mandalorian_Wars"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Jedi_Civil_War
+    id: "war/jedi-civil-war",
+    name: "Jedi Civil War",
+    startYear: -3959,
+    endYear: -3956,
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Galactic Republic + Jedi Order" },
+      { factions: ["sith_order"], label: "Sith Empire of Darth Revan" }
+    ],
+    theatrePlanetIds: ["planet/9", "planet/25"],
+    keyBattleIds: [
+      "battle/rakata-prime"
+    ],
+    summary:
+      "After falling to the dark side, Revan and Malak launched a Sith Empire that nearly conquered the Republic; Revan was ultimately redeemed and defeated Malak above the Star Forge at Rakata Prime.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Jedi_Civil_War"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Cold_War_(Old_Republic)
+    id: "war/old-republic-cold-war",
+    name: "Old Republic–Sith Cold War",
+    startYear: -3653,
+    endYear: -3641,
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Galactic Republic + Jedi Order" },
+      { factions: ["sith_order"], label: "Sith Empire" }
+    ],
+    theatrePlanetIds: ["planet/9", "planet/22"],
+    keyBattleIds: [
+      "battle/coruscant-sacking"
+    ],
+    summary:
+      "Following the Treaty of Coruscant, an uneasy peace masked ongoing proxy conflicts between the Republic and the reconstituted Sith Empire; the cold war eventually collapsed into renewed open warfare.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Cold_War_(Old_Republic)"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Clone_Wars
+    id: "war/clone-wars",
+    name: "Clone Wars",
+    startYear: -22,
+    endYear: -19,
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Galactic Republic + Grand Army of the Republic" },
+      { factions: ["cis", "trade_federation"], label: "Confederacy of Independent Systems" }
+    ],
+    theatrePlanetIds: [
+      "planet/11", "planet/9", "planet/14", "planet/12",
+      "planet/37", "planet/60", "planet/17", "planet/16"
+    ],
+    keyBattleIds: [
+      "battle/geonosis-1",
+      "battle/ryloth",
+      "battle/umbara",
+      "battle/mygeeto",
+      "battle/felucia",
+      "battle/kashyyyk",
+      "battle/utapau",
+      "battle/coruscant-19bby",
+      "battle/order-66"
+    ],
+    summary:
+      "A galaxy-spanning three-year conflict between the Republic clone army and the Separatist droid forces, secretly engineered by Darth Sidious to grant himself emergency powers and destroy the Jedi.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Clone_Wars"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Galactic_Civil_War
+    id: "war/galactic-civil-war",
+    name: "Galactic Civil War",
+    startYear: -2,
+    endYear: 5,
+    belligerents: [
+      { factions: ["rebel_alliance", "new_republic"], label: "Alliance to Restore the Republic / New Republic" },
+      { factions: ["galactic_empire"], label: "Galactic Empire" }
+    ],
+    theatrePlanetIds: [
+      "planet/3", "planet/4", "planet/7", "planet/1",
+      "planet/2", "planet/33", "planet/6"
+    ],
+    keyBattleIds: [
+      "battle/scarif",
+      "battle/yavin",
+      "battle/hoth",
+      "battle/endor",
+      "battle/jakku"
+    ],
+    summary:
+      "The Rebel Alliance's guerrilla war against Palpatine's Galactic Empire, culminating in the Emperor's death at Endor and the Empire's final military defeat at the Battle of Jakku.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Galactic_Civil_War"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Yuuzhan_Vong_War
+    id: "war/yuuzhan-vong-war",
+    name: "Yuuzhan Vong War",
+    startYear: 25,
+    endYear: 29,
+    belligerents: [
+      { factions: ["new_republic", "jedi_order"], label: "New Republic / Galactic Alliance + Jedi Order" },
+      { factions: ["unknown"], label: "Yuuzhan Vong Empire" }
+    ],
+    theatrePlanetIds: ["planet/9", "planet/22", "planet/8"],
+    keyBattleIds: [
+      "battle/coruscant-25aby",
+      "battle/ebaq-9"
+    ],
+    summary:
+      "The Yuuzhan Vong, extra-galactic invaders immune to the Force, conquered a third of the galaxy including Coruscant before a unified galactic defense drove them back and ended the invasion at Yuuzhan'tar.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Yuuzhan_Vong_War"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/First_Order%E2%80%93Resistance_War
+    id: "war/first-order-resistance-war",
+    name: "First Order–Resistance War",
+    startYear: 34,
+    endYear: 35,
+    belligerents: [
+      { factions: ["resistance"], label: "Resistance / Citizens' Fleet" },
+      { factions: ["first_order", "sith_order"], label: "First Order + Sith Eternal" }
+    ],
+    theatrePlanetIds: ["planet/1"],
+    keyBattleIds: [
+      "battle/starkiller-base",
+      "battle/crait",
+      "battle/exegol"
+    ],
+    summary:
+      "The remnant Resistance fought the militarized First Order and the hidden Sith Eternal fleet, culminating in Rey's defeat of the resurrected Palpatine above Exegol, ending the Sith forever.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/First_Order%E2%80%93Resistance_War"]
+  }
+];
+
+// ---------------------------------------------------------------------------
+// Battles
+// ---------------------------------------------------------------------------
+// https://starwars.fandom.com/wiki/Category:Battles
+
+export const BATTLES: Battle[] = [
+  // ── Old Sith Wars era ──────────────────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Korriban_(Great_Hyperspace_War)
+    id: "battle/korriban-5000bby",
+    name: "Battle of Korriban",
+    year: -5000,
+    warId: "war/old-sith-wars",
+    planetId: null, // Korriban not in kb.json
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Galactic Republic + Jedi Order" },
+      { factions: ["sith_order"], label: "Sith Empire" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Republic Hammerhead-class cruiser",
+      "Sith dreadnought",
+      "Sith Interdictor",
+      "Republic starfighter",
+      "Sith fighter"
+    ],
+    summary:
+      "The Republic and Jedi Order invaded Korriban during the Great Hyperspace War, routing the Sith and sacking their ancient homeworld, though the Sith Empire would reconstitute itself over centuries.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Korriban_(Great_Hyperspace_War)"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Ruusan
+    id: "battle/ruusan",
+    name: "Battle of Ruusan",
+    year: -1000,
+    warId: "war/old-sith-wars",
+    planetId: null, // Ruusan not in kb.json
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Army of Light (Jedi Order)" },
+      { factions: ["sith_order"], label: "Brotherhood of Darkness" }
+    ],
+    outcome: "victory",
+    winningSide: "Army of Light",
+    shipsInvolved: [
+      "Republic transport",
+      "Sith warship",
+      "Jedi fighter",
+      "Republic gunship",
+      "Sith interceptor"
+    ],
+    summary:
+      "Lord Hoth's Army of Light faced the Sith Brotherhood of Darkness on Ruusan; Darth Bane survived and implemented the Rule of Two, ending the Sith's open warfare with the Republic for a millennium.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Ruusan"]
+  },
+
+  // ── Mandalorian Wars era ───────────────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Malachor_V
+    id: "battle/malachor-v",
+    name: "Battle of Malachor V",
+    year: -3960,
+    warId: "war/mandalorian-wars",
+    planetId: null, // Malachor V not in kb.json
+    belligerents: [
+      { factions: ["galactic_republic"], label: "Republic Revanchists under Meetra Surik" },
+      { factions: ["mandalorian"], label: "Mandalorian Neo-Crusaders" }
+    ],
+    outcome: "pyrrhic",
+    winningSide: "Galactic Republic (pyrrhic)",
+    shipsInvolved: [
+      "Republic Hammerhead-class cruiser",
+      "Mandalorian warship",
+      "Basilisk war droid",
+      "Republic starfighter",
+      "Mass Shadow Generator (superweapon)"
+    ],
+    summary:
+      "Meetra Surik activated the mass-shadow generator above Malachor V, crushing both fleets in the planet's gravity; the Mandalorian Wars ended but the echo in the Force wounded the Jedi Exile and shattered Revan.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Malachor_V"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Malachor_V_(Mandalorian_Wars)
+    id: "battle/malachor-v-bombardment",
+    name: "Orbital Bombardment of Malachor V",
+    year: -3960,
+    warId: "war/mandalorian-wars",
+    planetId: null,
+    belligerents: [
+      { factions: ["galactic_republic"], label: "Republic Orbital Strike Force" },
+      { factions: ["mandalorian"], label: "Mandalorian ground forces" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Republic Hammerhead-class cruiser",
+      "Mandalorian Neo-Crusader warship",
+      "Republic assault shuttle",
+      "Mandalorian fighter",
+      "Republic bomber"
+    ],
+    summary:
+      "As the mass-shadow generator activated at Malachor V's surface, a simultaneous orbital strike finished the Mandalorian fleet, effectively ending the Neo-Crusader campaign in the Outer Rim.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Malachor_V"]
+  },
+
+  // ── Jedi Civil War era ─────────────────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Rakata_Prime
+    id: "battle/rakata-prime",
+    name: "Battle of Rakata Prime",
+    year: -3956,
+    warId: "war/jedi-civil-war",
+    planetId: null, // Rakata Prime (the Foundry) not in kb.json
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic fleet + redeemed Revan" },
+      { factions: ["sith_order"], label: "Darth Malak's Sith Empire" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Star Forge (Sith superweapon/factory)",
+      "Republic Hammerhead-class cruiser",
+      "Ebon Hawk (light freighter)",
+      "Sith fighter",
+      "Republic starfighter"
+    ],
+    summary:
+      "Revan boarded the Star Forge and slew Darth Malak in single combat while Republic and Jedi fleets destroyed the automated Sith fleet being produced by the ancient Rakatan station, ending the Jedi Civil War.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Rakata_Prime"]
+  },
+
+  // ── Old Republic Cold War ──────────────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Sacking_of_Coruscant
+    id: "battle/coruscant-sacking",
+    name: "Sacking of Coruscant",
+    year: -3653,
+    warId: "war/old-republic-cold-war",
+    planetId: "planet/9",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Galactic Republic" },
+      { factions: ["sith_order"], label: "Sith Empire" }
+    ],
+    outcome: "defeat",
+    winningSide: "Sith Empire",
+    shipsInvolved: [
+      "Sith Imperial dreadnought",
+      "Sith troop transport",
+      "Republic orbital defense platform",
+      "Sith interceptor",
+      "Republic patrol ship"
+    ],
+    summary:
+      "A Sith delegation secretly brought an invasion force to Coruscant under the guise of treaty negotiations, sacking the Jedi Temple and forcing the Republic to accept the humiliating Treaty of Coruscant.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Sacking_of_Coruscant"]
+  },
+
+  // ── Clone Wars era ────────────────────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Invasion_of_Naboo
+    id: "battle/naboo",
+    name: "Battle of Naboo",
+    year: -32,
+    warId: null, // Standalone — predates Clone Wars
+    planetId: "planet/8",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Naboo Royal Security Forces + Gungan Grand Army" },
+      { factions: ["trade_federation"], label: "Trade Federation Droid Army" }
+    ],
+    outcome: "victory",
+    winningSide: "Naboo / Gungan",
+    shipsInvolved: [
+      "Trade Federation Droid Control Ship (Lucrehulk-class)",
+      "Naboo N-1 starfighter",
+      "Trade Federation Multi-Troop Transport",
+      "Naboo Royal Starship",
+      "Trade Federation Armored Assault Tank"
+    ],
+    summary:
+      "Young Anakin Skywalker destroyed the Droid Control Ship from within, deactivating the droid army; Queen Amidala's forces simultaneously captured Viceroy Gunray in the Theed palace.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Invasion_of_Naboo"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/First_Battle_of_Geonosis
+    id: "battle/geonosis-1",
+    name: "First Battle of Geonosis",
+    year: -22,
+    warId: "war/clone-wars",
+    planetId: "planet/11",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Grand Army of the Republic + Jedi Order" },
+      { factions: ["cis", "trade_federation"], label: "Confederacy of Independent Systems" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Republic LAAT/i gunship",
+      "Separatist Hardcell-class interstellar transport",
+      "Republic Acclamator-class assault ship",
+      "Separatist Hailfire droid",
+      "Republic AT-TE walker"
+    ],
+    summary:
+      "Mace Windu led 212 Jedi into the Geonosian execution arena; Yoda arrived with the newly revealed clone army to repel the Separatist forces, beginning the Clone Wars.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/First_Battle_of_Geonosis"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Ryloth
+    id: "battle/ryloth",
+    name: "Battle of Ryloth",
+    year: -21,
+    warId: "war/clone-wars",
+    planetId: "planet/37",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic 212th Attack Battalion + Twi'lek freedom fighters" },
+      { factions: ["cis"], label: "Separatist Droid Army" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Republic Venator-class Star Destroyer",
+      "Separatist Recusant-class light destroyer",
+      "Republic LAAT/i gunship",
+      "Separatist Hyena-class droid bomber",
+      "Separatist DSD1 dwarf spider droid"
+    ],
+    summary:
+      "General Windu and Cham Syndulla liberated Ryloth from Separatist occupation and Techno Union control in a three-phase campaign spanning orbital and ground operations.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Ryloth"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Umbara
+    id: "battle/umbara",
+    name: "Battle of Umbara",
+    year: -20,
+    warId: "war/clone-wars",
+    planetId: "planet/60",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic 501st Legion" },
+      { factions: ["cis"], label: "Umbaran Militia + Separatist Droid Army" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Republic Venator-class Star Destroyer",
+      "Umbaran starfighter",
+      "Republic LAAT/i gunship",
+      "Umbaran MHC mobile heavy cannon",
+      "Separatist supply ship"
+    ],
+    summary:
+      "General Krell's treacherous command sent clone troopers on suicidal assaults on the shadow world of Umbara; Rex and the 501st exposed Krell's treachery and secured the planet for the Republic.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Umbara"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Mygeeto
+    id: "battle/mygeeto",
+    name: "Battle of Mygeeto",
+    year: -19,
+    warId: "war/clone-wars",
+    planetId: "planet/16",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic Galactic Marines under Ki-Adi-Mundi" },
+      { factions: ["cis"], label: "Separatist Droid Army" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic (nominal)",
+    shipsInvolved: [
+      "Republic Venator-class Star Destroyer",
+      "Separatist Hardcell-class interstellar transport",
+      "Republic AT-TE walker",
+      "Separatist Tri-Fighter",
+      "Republic LAAT/i gunship"
+    ],
+    summary:
+      "General Ki-Adi-Mundi led the 21st Nova Corps in a brutal urban campaign on the crystalline banking world; he was shot down by his own clone troopers when Order 66 was executed.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Mygeeto"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Felucia
+    id: "battle/felucia",
+    name: "Battle of Felucia",
+    year: -19,
+    warId: "war/clone-wars",
+    planetId: "planet/17",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic forces under Aayla Secura" },
+      { factions: ["cis"], label: "Separatist Droid Army" }
+    ],
+    outcome: "stalemate",
+    winningSide: undefined,
+    shipsInvolved: [
+      "Republic Venator-class Star Destroyer",
+      "Separatist Hardcell transport",
+      "Republic LAAT/i gunship",
+      "Separatist Octuptarra tri-droid",
+      "Republic AT-RT walker"
+    ],
+    summary:
+      "A prolonged contested campaign on the fungal jungle world; General Aayla Secura was cut down by clone troopers loyal to Order 66 before the planet was fully secured.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Felucia"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Kashyyyk
+    id: "battle/kashyyyk",
+    name: "Battle of Kashyyyk",
+    year: -19,
+    warId: "war/clone-wars",
+    planetId: "planet/14",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic clone forces + Wookiee warriors under Yoda" },
+      { factions: ["cis"], label: "Separatist Droid Army" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Republic Venator-class Star Destroyer",
+      "Separatist Recusant-class destroyer",
+      "Separatist DSD1 dwarf spider droid",
+      "Wookiee catamaran",
+      "Republic LAAT/i gunship"
+    ],
+    summary:
+      "Yoda led clone forces alongside Wookiee warriors to defend Kashyyyk from a massive Separatist amphibious assault; Yoda survived Order 66 and escaped with Tarfful's aid.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Kashyyyk"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Utapau
+    id: "battle/utapau",
+    name: "Battle of Utapau",
+    year: -19,
+    warId: "war/clone-wars",
+    planetId: "planet/12",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic 212th Attack Battalion under Obi-Wan Kenobi" },
+      { factions: ["cis"], label: "Separatist Droid Army + General Grievous" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Republic Venator-class Star Destroyer",
+      "Separatist Providence-class dreadnought",
+      "Republic LAAT/i gunship",
+      "Separatist Vulture-class droid starfighter",
+      "Republic AT-RT walker"
+    ],
+    summary:
+      "Obi-Wan Kenobi descended to Pau City's sinkholes, killed General Grievous in personal combat, and drove the Separatist forces from Utapau before Order 66 forced him to flee.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Utapau"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Coruscant_(Clone_Wars)
+    id: "battle/coruscant-19bby",
+    name: "Battle of Coruscant",
+    year: -19,
+    warId: "war/clone-wars",
+    planetId: "planet/9",
+    belligerents: [
+      { factions: ["galactic_republic", "jedi_order"], label: "Republic Home Fleet" },
+      { factions: ["cis"], label: "Separatist Navy under General Grievous" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Republic",
+    shipsInvolved: [
+      "Invisible Hand (Providence-class dreadnought)",
+      "Republic Venator-class Star Destroyer",
+      "Separatist Vulture-class droid starfighter",
+      "Republic ARC-170 starfighter",
+      "Republic V-wing starfighter"
+    ],
+    summary:
+      "Grievous's fleet ambushed Coruscant, capturing Chancellor Palpatine; Obi-Wan and Anakin infiltrated the Invisible Hand, killed Count Dooku, rescued the Chancellor, and crash-landed the burning cruiser.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Coruscant_(Clone_Wars)"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Order_66
+    id: "battle/order-66",
+    name: "Order 66 / Fall of the Jedi",
+    year: -19,
+    warId: "war/clone-wars",
+    planetId: "planet/9",
+    belligerents: [
+      { factions: ["galactic_empire", "galactic_republic"], label: "Clone troopers executing Order 66" },
+      { factions: ["jedi_order"], label: "Jedi Order" }
+    ],
+    outcome: "defeat",
+    winningSide: "Galactic Empire",
+    shipsInvolved: [
+      "Republic Venator-class Star Destroyer",
+      "Republic LAAT/i gunship",
+      "Republic AT-TE walker",
+      "Clone trooper BARC speeder",
+      "Republic gunboat"
+    ],
+    summary:
+      "Emperor Palpatine transmitted Order 66, compelling clone troopers galaxy-wide to execute their Jedi commanders; only a handful of Jedi survived, ending the Jedi Order as an institutional force.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Order_66"]
+  },
+
+  // ── Galactic Civil War era ────────────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Scarif
+    id: "battle/scarif",
+    name: "Battle of Scarif",
+    year: -1,
+    warId: "war/galactic-civil-war",
+    planetId: null, // Scarif not in kb.json
+    belligerents: [
+      { factions: ["rebel_alliance"], label: "Rogue One / Rebel Alliance fleet" },
+      { factions: ["galactic_empire"], label: "Galactic Empire" }
+    ],
+    outcome: "pyrrhic",
+    winningSide: "Rebel Alliance (pyrrhic)",
+    shipsInvolved: [
+      "Imperial Star Destroyer (Imperial I-class)",
+      "Profundity (Mon Calamari cruiser)",
+      "Imperial Death Star",
+      "Rebel X-wing",
+      "Imperial AT-ACT walker"
+    ],
+    summary:
+      "Rogue One's sacrifice on Scarif transmitted the Death Star plans to the Rebel fleet; the Imperial Star Destroyer Devastator intercepted the Tantive IV moments after transmission.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Scarif"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Yavin
+    id: "battle/yavin",
+    name: "Battle of Yavin",
+    year: 0,
+    warId: "war/galactic-civil-war",
+    planetId: "planet/3",
+    belligerents: [
+      { factions: ["rebel_alliance"], label: "Rebel Alliance Starfighter Corps" },
+      { factions: ["galactic_empire"], label: "Galactic Empire" }
+    ],
+    outcome: "victory",
+    winningSide: "Rebel Alliance",
+    shipsInvolved: [
+      "Death Star (DS-1 Orbital Battle Station)",
+      "T-65B X-wing starfighter",
+      "BTL-A4 Y-wing assault starfighter",
+      "TIE/ln space superiority fighter",
+      "Imperial Star Destroyer"
+    ],
+    summary:
+      "Luke Skywalker fired a proton torpedo into the Death Star's exhaust port using the Force, destroying it seconds before it could fire on Yavin 4, in the defining victory of the Rebel Alliance.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Yavin"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Hoth
+    id: "battle/hoth",
+    name: "Battle of Hoth",
+    year: 3,
+    warId: "war/galactic-civil-war",
+    planetId: "planet/4",
+    belligerents: [
+      { factions: ["rebel_alliance"], label: "Rebel Alliance (Echo Base garrison)" },
+      { factions: ["galactic_empire"], label: "Galactic Empire (Death Squadron)" }
+    ],
+    outcome: "defeat",
+    winningSide: "Galactic Empire",
+    shipsInvolved: [
+      "Imperial AT-AT walker",
+      "Rebel T-47 airspeeder",
+      "Imperial Star Destroyer (Executor-class Super Star Destroyer)",
+      "Rebel GR-75 medium transport",
+      "TIE/ln fighter"
+    ],
+    summary:
+      "Vader's Death Squadron overwhelmed Echo Base; a rearguard ion cannon covered the evacuation of most transports while Luke and the ground forces bought time before escaping separately.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Hoth"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Endor
+    id: "battle/endor",
+    name: "Battle of Endor",
+    year: 4,
+    warId: "war/galactic-civil-war",
+    planetId: "planet/7",
+    belligerents: [
+      { factions: ["rebel_alliance"], label: "Alliance fleet + Ewok ground forces" },
+      { factions: ["galactic_empire"], label: "Galactic Empire" }
+    ],
+    outcome: "victory",
+    winningSide: "Rebel Alliance",
+    shipsInvolved: [
+      "Death Star II (DS-2 Death Star)",
+      "Executor-class Super Star Destroyer (Executor)",
+      "Rebel B-wing starfighter",
+      "TIE Interceptor",
+      "Mon Calamari MC80 Star Cruiser"
+    ],
+    summary:
+      "The Alliance fleet was lured into a trap but the Ewoks destroyed the shield generator; inside the Death Star II, Vader turned on the Emperor, sacrificing himself to save his son and end the Sith's grip on the galaxy.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Endor"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Jakku
+    id: "battle/jakku",
+    name: "Battle of Jakku",
+    year: 5,
+    warId: "war/galactic-civil-war",
+    planetId: null, // Jakku not in kb.json (not to be confused with Tatooine)
+    belligerents: [
+      { factions: ["new_republic"], label: "New Republic fleet" },
+      { factions: ["galactic_empire"], label: "Galactic Empire remnant (Operation Cinder)" }
+    ],
+    outcome: "victory",
+    winningSide: "New Republic",
+    shipsInvolved: [
+      "Imperial II-class Star Destroyer",
+      "New Republic MC85 Star Cruiser",
+      "New Republic X-wing",
+      "Imperial TIE Fighter",
+      "Imperial Super Star Destroyer (Ravager)"
+    ],
+    summary:
+      "The New Republic's decisive victory over the Imperial remnant above the desert world Jakku; dozens of Star Destroyers crashed onto the surface, ending the Empire as a galactic power and leading to the Galactic Concordance.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Jakku"]
+  },
+
+  // ── Yuuzhan Vong War era ───────────────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Coruscant_(Yuuzhan_Vong_War)
+    id: "battle/coruscant-25aby",
+    name: "Fall of Coruscant",
+    year: 27,
+    warId: "war/yuuzhan-vong-war",
+    planetId: "planet/9",
+    belligerents: [
+      { factions: ["new_republic", "jedi_order"], label: "New Republic / Galactic Alliance" },
+      { factions: ["unknown"], label: "Yuuzhan Vong Empire" }
+    ],
+    outcome: "defeat",
+    winningSide: "Yuuzhan Vong",
+    shipsInvolved: [
+      "Yuuzhan Vong worldship",
+      "New Republic MC80 Mon Calamari cruiser",
+      "Yuuzhan Vong coralskipper",
+      "New Republic X-wing",
+      "Yuuzhan Vong analog assault vessel"
+    ],
+    summary:
+      "The Yuuzhan Vong overran Coruscant's defenses and reshaped the planet's surface into a simulacrum of their lost homeworld, Yuuzhan'tar; New Republic leadership scattered and the Galactic Alliance was formed from the remnants.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Coruscant_(Yuuzhan_Vong_War)"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Ebaq_9
+    id: "battle/ebaq-9",
+    name: "Battle of Ebaq 9",
+    year: 28,
+    warId: "war/yuuzhan-vong-war",
+    planetId: null, // Ebaq 9 not in kb.json
+    belligerents: [
+      { factions: ["new_republic", "jedi_order"], label: "Galactic Alliance fleet under Admiral Ackbar" },
+      { factions: ["unknown"], label: "Yuuzhan Vong fleet" }
+    ],
+    outcome: "victory",
+    winningSide: "Galactic Alliance",
+    shipsInvolved: [
+      "New Republic MC80 cruiser",
+      "Yuuzhan Vong worldship",
+      "Yuuzhan Vong coralskipper",
+      "New Republic A-wing",
+      "New Republic Bothan Assault Cruiser"
+    ],
+    summary:
+      "Admiral Ackbar's trap lured the main Yuuzhan Vong fleet into the narrow Ebaq 9 asteroid field; Jaina Solo and Vergere destroyed Warmaster Tsavong Lah's command ship, turning the tide of the war.",
+    canonicity: "legends",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Ebaq_9"]
+  },
+
+  // ── First Order–Resistance War era ────────────────────────────────────────
+  {
+    // https://starwars.fandom.com/wiki/Destruction_of_Starkiller_Base
+    id: "battle/starkiller-base",
+    name: "Destruction of Starkiller Base",
+    year: 34,
+    warId: "war/first-order-resistance-war",
+    planetId: null, // Starkiller Base (Ilum) not in kb.json
+    belligerents: [
+      { factions: ["resistance"], label: "Resistance Starfighter Corps" },
+      { factions: ["first_order"], label: "First Order" }
+    ],
+    outcome: "victory",
+    winningSide: "Resistance",
+    shipsInvolved: [
+      "Starkiller Base (planet-converted superweapon)",
+      "Resistance T-70 X-wing",
+      "First Order TIE/fo space superiority fighter",
+      "Resistance B/SF-17 heavy bomber",
+      "First Order Resurgent-class Star Destroyer"
+    ],
+    summary:
+      "Poe Dameron led a Resistance strike that exploited a thermal oscillator weak point identified by Han Solo and Finn; Rey and Kylo Ren dueled in the snowy forests before the base's destruction.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Destruction_of_Starkiller_Base"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Crait
+    id: "battle/crait",
+    name: "Battle of Crait",
+    year: 34,
+    warId: "war/first-order-resistance-war",
+    planetId: null, // Crait not in kb.json
+    belligerents: [
+      { factions: ["resistance"], label: "Resistance survivors" },
+      { factions: ["first_order"], label: "First Order" }
+    ],
+    outcome: "tactical-victory",
+    winningSide: "Resistance (escaped)",
+    shipsInvolved: [
+      "First Order Resurgent-class Star Destroyer",
+      "First Order AT-M6 walker",
+      "Resistance ski speeder",
+      "First Order TIE Silencer",
+      "Resistance Millennium Falcon"
+    ],
+    summary:
+      "Luke Skywalker's Force projection bought time for the surviving Resistance to escape through the crystal mines of Crait; Luke died from the effort, becoming one with the Force.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Crait"]
+  },
+  {
+    // https://starwars.fandom.com/wiki/Battle_of_Exegol
+    id: "battle/exegol",
+    name: "Battle of Exegol",
+    year: 35,
+    warId: "war/first-order-resistance-war",
+    planetId: null, // Exegol not in kb.json
+    belligerents: [
+      { factions: ["resistance", "new_republic"], label: "Resistance + Citizens' Fleet" },
+      { factions: ["first_order", "sith_order"], label: "Sith Eternal + Final Order fleet" }
+    ],
+    outcome: "victory",
+    winningSide: "Resistance / Citizens' Fleet",
+    shipsInvolved: [
+      "Sith Eternal Xyston-class Star Destroyer",
+      "Resistance T-70 X-wing",
+      "Citizens' Fleet freighter",
+      "Sith TIE Dagger",
+      "Resistance Millennium Falcon"
+    ],
+    summary:
+      "Rey channeled the power of all the Jedi to destroy the resurrected Emperor Palpatine above Exegol; the Citizens' Fleet overwhelmed the Final Order's Star Destroyers, ending the Sith for all time.",
+    canonicity: "canon",
+    sources: ["https://starwars.fandom.com/wiki/Battle_of_Exegol"]
+  }
+];
