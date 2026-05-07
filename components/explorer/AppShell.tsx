@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import type { Battle, Entity, Hyperlane, TimelineEvent, War } from "@/lib/schema";
 import type { PlacedPlanet } from "@/lib/data/positions";
 import type { LineageGraph } from "@/lib/data/loadLineage";
+import type { PlanetImage } from "@/lib/data/loadPlanetImages";
+import type { PersonImage } from "@/lib/data/loadPersonImages";
 import { useSelection } from "@/lib/store";
 import dynamic from "next/dynamic";
 import { GalaxyCanvas } from "@/components/galaxy/GalaxyCanvas";
@@ -24,6 +26,7 @@ import { LineagePlaceholder } from "./LineagePlaceholder";
 import { SearchPalette } from "./SearchPalette";
 import { HyperspaceOverlay } from "./HyperspaceOverlay";
 import { AudioCueDispatcher } from "./AudioCueDispatcher";
+import { HoloStage } from "@/components/holostage";
 
 type Props = {
   entities: Entity[];
@@ -33,6 +36,8 @@ type Props = {
   lineage: LineageGraph | null;
   wars?: War[];
   battles?: Battle[];
+  planetImages?: Map<string, PlanetImage> | null;
+  personImages?: Map<string, PersonImage> | null;
 };
 
 export function AppShell({
@@ -42,7 +47,9 @@ export function AppShell({
   events,
   lineage,
   wars = [],
-  battles = []
+  battles = [],
+  planetImages = null,
+  personImages = null
 }: Props) {
   const view = useSelection((s) => s.view);
   const setSearchOpen = useSelection((s) => s.setSearchOpen);
@@ -109,7 +116,11 @@ export function AppShell({
             {view === "lineage" &&
               (lineage ? <LineageView graph={lineage} /> : <LineagePlaceholder />)}
           </div>
-          <Datapad entities={entities} />
+          <Datapad
+            entities={entities}
+            planetImages={planetImages}
+            personImages={personImages}
+          />
         </div>
         <TimelineScrubber />
       </div>
@@ -140,12 +151,17 @@ export function AppShell({
           {view === "lineage" && <LineagePlaceholder />}
         </div>
         <TimelineScrubber />
-        <DatapadDrawer entities={entities} />
+        <DatapadDrawer
+          entities={entities}
+          planetImages={planetImages}
+          personImages={personImages}
+        />
       </div>
 
       <SearchPalette entities={entities} />
       <HyperspaceOverlay />
       <AudioCueDispatcher />
+      <HoloStage entities={entities} lineage={lineage} personImages={personImages} />
     </div>
   );
 }

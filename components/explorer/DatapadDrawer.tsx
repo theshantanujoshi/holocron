@@ -1,16 +1,22 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { CaretUp, CaretDown, GlobeHemisphereWest, Clock, TreeStructure } from "@phosphor-icons/react";
 import type { Entity } from "@/lib/schema";
 import { useSelection, type ViewMode } from "@/lib/store";
 import { formatYear, cn } from "@/lib/utils";
 import { loadAllQuotesFor } from "@/lib/data/loadQuotes";
 import type { Quote } from "@/lib/data/quotes";
+import type { PlanetImage } from "@/lib/data/loadPlanetImages";
+import type { PersonImage } from "@/lib/data/loadPersonImages";
+import { PlanetDetail } from "@/components/planet/PlanetDetail";
+import { HoloStageButton } from "@/components/holostage";
 
 type Props = {
   entities: Entity[];
+  planetImages?: Map<string, PlanetImage> | null;
+  personImages?: Map<string, PersonImage> | null;
 };
 
 const SPRING = { type: "spring", stiffness: 240, damping: 28 } as const;
@@ -27,11 +33,12 @@ const PIVOT_VIEWS: Array<{
   { id: "lineage", label: "Show on lineage", Icon: TreeStructure, personOnly: true }
 ];
 
-export function DatapadDrawer({ entities }: Props) {
+export function DatapadDrawer({ entities, planetImages = null, personImages = null }: Props) {
   const [expanded, setExpanded] = useState(false);
   const selectedId = useSelection((s) => s.entityId);
   const currentView = useSelection((s) => s.view);
   const setView = useSelection((s) => s.setView);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const entityMap = useMemo(() => {
     const m = new Map<string, Entity>();
@@ -40,6 +47,10 @@ export function DatapadDrawer({ entities }: Props) {
   }, [entities]);
 
   const entity = selectedId ? entityMap.get(selectedId) : null;
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [entity?.id]);
 
   return (
     <motion.div
@@ -113,12 +124,14 @@ export function DatapadDrawer({ entities }: Props) {
                 </button>
               );
             })}
+            {entity.type === "person" && <HoloStageButton />}
           </div>
         )}
       </div>
 
       {/* Drawer content */}
       <div
+        ref={scrollRef}
         id="datapad-drawer-content"
         className="h-[calc(70vh-56px)] overflow-y-auto"
         hidden={!expanded}
@@ -141,6 +154,15 @@ export function DatapadDrawer({ entities }: Props) {
                 Press <kbd className="border border-border-faint px-1">/</kbd> to search.
               </p>
             </motion.div>
+          ) : entity.type === "planet" ? (
+            <PlanetDetail
+              key={entity.id}
+              entity={entity}
+              entities={entities}
+              planetImages={planetImages}
+              personImages={personImages}
+              scrollContainer={scrollRef}
+            />
           ) : (
             <motion.article
               key={entity.id}

@@ -22,6 +22,7 @@ export type SelectionState = {
   atlasMode: boolean;
   searchOpen: boolean;
   pivoting: boolean;
+  holoStage: boolean;
   route: RouteState;
 };
 
@@ -34,6 +35,7 @@ type SelectionActions = {
   toggleAtlas: () => void;
   setSearchOpen: (open: boolean) => void;
   setPivoting: (pivoting: boolean) => void;
+  setHoloStage: (open: boolean) => void;
   startRoute: () => void;
   pickEndpoint: (planetId: string) => void;
   clearRoute: () => void;
@@ -55,6 +57,7 @@ const INITIAL: SelectionState = {
   atlasMode: false,
   searchOpen: false,
   pivoting: false,
+  holoStage: false,
   route: INITIAL_ROUTE
 };
 
@@ -68,6 +71,7 @@ export const useSelection = create<SelectionState & SelectionActions>((set) => (
   toggleAtlas: () => set((s) => ({ atlasMode: !s.atlasMode })),
   setSearchOpen: (open) => set({ searchOpen: open }),
   setPivoting: (pivoting) => set({ pivoting }),
+  setHoloStage: (open) => set({ holoStage: open }),
   startRoute: () =>
     set({
       route: { mode: "picking-origin", originId: null, destinationId: null }

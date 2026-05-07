@@ -105,6 +105,32 @@ export const Media = z.object({
   officialClipUrl: z.string().optional()
 });
 
+/**
+ * Planet-only physical attributes from SWAPI. Optional everywhere — legacy KB
+ * builds (or planets where SWAPI marks the field "unknown") simply omit these,
+ * and the UI gracefully degrades. Numeric fields hold parsed numbers; non-
+ * numeric SWAPI strings (e.g. `"unknown"`, `"n/a"`) are dropped during ingest.
+ */
+export const Physical = z.object({
+  /** Comma-separated SWAPI climate keywords ("arid", "frozen", "temperate"…). */
+  climate: z.string().optional(),
+  /** Comma-separated SWAPI terrain keywords ("desert", "jungle"…). */
+  terrain: z.string().optional(),
+  /** Standard gravities; 1 ≈ Earth/Coruscant. */
+  gravity: z.number().optional(),
+  /** Surface water as a 0–100 percentage. */
+  surfaceWater: z.number().optional(),
+  /** Population, integer. */
+  population: z.number().optional(),
+  /** Planet diameter in km. */
+  diameter: z.number().optional(),
+  /** Day length in standard hours. */
+  rotationHours: z.number().optional(),
+  /** Year length in standard days. */
+  orbitalDays: z.number().optional()
+});
+export type Physical = z.infer<typeof Physical>;
+
 export const Entity = z.object({
   id: z.string(),
   type: EntityType,
@@ -113,6 +139,8 @@ export const Entity = z.object({
   canonicity: Canonicity,
   era: Era.optional(),
   spatial: Spatial.optional(),
+  /** Planet-only — populated from SWAPI by build-kb.ts. */
+  physical: Physical.optional(),
   affiliations: z.array(Affiliation).default([]),
   relations: z.array(Relation).default([]),
   short: z.string().default(""),

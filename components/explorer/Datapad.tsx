@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { GlobeHemisphereWest, Clock, TreeStructure, Play, Path } from "@phosphor-icons/react";
 import type { Entity } from "@/lib/schema";
 import { useSelection, type ViewMode } from "@/lib/store";
@@ -9,9 +9,15 @@ import { formatYear, cn } from "@/lib/utils";
 import { EntityCrawl } from "@/components/EntityCrawl";
 import { loadAllQuotesFor } from "@/lib/data/loadQuotes";
 import type { Quote } from "@/lib/data/quotes";
+import type { PlanetImage } from "@/lib/data/loadPlanetImages";
+import type { PersonImage } from "@/lib/data/loadPersonImages";
+import { PlanetDetail } from "@/components/planet/PlanetDetail";
+import { HoloStageButton } from "@/components/holostage";
 
 type Props = {
   entities: Entity[];
+  planetImages?: Map<string, PlanetImage> | null;
+  personImages?: Map<string, PersonImage> | null;
 };
 
 const LORE_SPRING = { type: "spring", stiffness: 240, damping: 28 } as const;
@@ -28,11 +34,12 @@ const PIVOT_VIEWS: Array<{
   { id: "lineage", label: "Show on lineage", Icon: TreeStructure, personOnly: true }
 ];
 
-export function Datapad({ entities }: Props) {
+export function Datapad({ entities, planetImages = null, personImages = null }: Props) {
   const selectedId = useSelection((s) => s.entityId);
   const currentView = useSelection((s) => s.view);
   const setView = useSelection((s) => s.setView);
   const [crawlOpen, setCrawlOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const isShipLike = (type: Entity["type"] | undefined) => type === "ship" || type === "vehicle";
 
   const entityMap = useMemo(() => {
@@ -46,6 +53,12 @@ export function Datapad({ entities }: Props) {
   useEffect(() => {
     if (!entity) setCrawlOpen(false);
   }, [entity]);
+
+  // Reset scroll position when the entity changes — otherwise the planet
+  // detail's scroll-collapse can land in a half-collapsed state on pivot.
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [entity?.id]);
 
   return (
     <aside
@@ -111,6 +124,7 @@ export function Datapad({ entities }: Props) {
               })}
             </div>
           )}
+          {entity?.type === "person" && <HoloStageButton />}
           {entity && (
             <span
               className={
@@ -127,10 +141,19 @@ export function Datapad({ entities }: Props) {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
         <AnimatePresence mode="wait">
           {!entity ? (
             <EmptyState key="empty" />
+          ) : entity.type === "planet" ? (
+            <PlanetDetail
+              key={entity.id}
+              entity={entity}
+              entities={entities}
+              planetImages={planetImages}
+              personImages={personImages}
+              scrollContainer={scrollRef}
+            />
           ) : (
             <motion.article
               key={entity.id}

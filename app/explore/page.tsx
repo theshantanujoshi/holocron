@@ -3,6 +3,8 @@ import { loadKb, planetsFrom } from "@/lib/data/loadKb";
 import { loadLanes } from "@/lib/data/loadLanes";
 import { loadLineageGraph } from "@/lib/data/loadLineage";
 import { loadWars } from "@/lib/data/loadWars";
+import { loadPersonImages } from "@/lib/data/loadPersonImages";
+import { loadPlanetImages } from "@/lib/data/loadPlanetImages";
 import { placePlanets } from "@/lib/data/positions";
 import { CANON_EVENTS } from "@/lib/data/canon-events";
 import { AppShell } from "@/components/explorer/AppShell";
@@ -15,10 +17,12 @@ export default async function ExplorePage() {
   if (!kb) return notFound();
 
   const planets = placePlanets(planetsFrom(kb));
-  const [lanes, lineage, warsData] = await Promise.all([
+  const [lanes, lineage, warsData, personImages, planetImages] = await Promise.all([
     loadLanes(),
     loadLineageGraph(),
-    loadWars()
+    loadWars(),
+    loadPersonImages(),
+    loadPlanetImages()
   ]);
 
   return (
@@ -30,6 +34,8 @@ export default async function ExplorePage() {
       lineage={lineage}
       wars={warsData?.wars ?? []}
       battles={warsData?.battles ?? []}
+      personImages={personImages}
+      planetImages={planetImages}
     />
   );
 }

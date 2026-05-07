@@ -218,8 +218,62 @@ function transformPerson(p: SwapiPerson): TEntity {
   };
 }
 
+/**
+ * Parse a SWAPI numeric field. SWAPI uses string values for numbers and
+ * sentinels like "unknown", "indefinite", "n/a" for missing data. Returns
+ * undefined when the value isn't a finite number.
+ */
+function parseSwapiNumber(raw: string | undefined): number | undefined {
+  if (!raw) return undefined;
+  const trimmed = raw.trim().toLowerCase();
+  if (trimmed === "" || trimmed === "unknown" || trimmed === "n/a" || trimmed === "indefinite") {
+    return undefined;
+  }
+  // SWAPI gravity often comes as e.g. "1 standard", strip the suffix.
+  const match = trimmed.match(/-?\d+(?:\.\d+)?/);
+  if (!match) return undefined;
+  const n = Number.parseFloat(match[0]);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function buildPhysical(p: SwapiPlanet) {
+  const climate = p.climate && p.climate !== "unknown" ? p.climate : undefined;
+  const terrain = p.terrain && p.terrain !== "unknown" ? p.terrain : undefined;
+  const gravity = parseSwapiNumber(p.gravity);
+  const surfaceWater = parseSwapiNumber(p.surface_water);
+  const population = parseSwapiNumber(p.population);
+  const diameter = parseSwapiNumber(p.diameter);
+  const rotationHours = parseSwapiNumber(p.rotation_period);
+  const orbitalDays = parseSwapiNumber(p.orbital_period);
+
+  // Only attach the block when at least one field landed — keeps legacy
+  // entities from picking up a noisy empty `physical: {}`.
+  const hasAny =
+    climate !== undefined ||
+    terrain !== undefined ||
+    gravity !== undefined ||
+    surfaceWater !== undefined ||
+    population !== undefined ||
+    diameter !== undefined ||
+    rotationHours !== undefined ||
+    orbitalDays !== undefined;
+  if (!hasAny) return undefined;
+
+  return {
+    ...(climate !== undefined && { climate }),
+    ...(terrain !== undefined && { terrain }),
+    ...(gravity !== undefined && { gravity }),
+    ...(surfaceWater !== undefined && { surfaceWater }),
+    ...(population !== undefined && { population }),
+    ...(diameter !== undefined && { diameter }),
+    ...(rotationHours !== undefined && { rotationHours }),
+    ...(orbitalDays !== undefined && { orbitalDays })
+  };
+}
+
 function transformPlanet(p: SwapiPlanet): TEntity {
   const id = urlToId(p.url, "planet");
+  const physical = buildPhysical(p);
   return {
     id,
     type: "planet",
@@ -227,6 +281,7 @@ function transformPlanet(p: SwapiPlanet): TEntity {
     aliases: [],
     canonicity: "canon",
     spatial: {},
+    ...(physical && { physical }),
     affiliations: [],
     relations: [
       ...p.films.map((f) => ({ kind: "appears_in" as const, target: urlToId(f, "film") })),
