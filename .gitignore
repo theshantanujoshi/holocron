@@ -8,3 +8,4 @@ out
 data/build/planets.parzivail.json
 data/.cache
 .vercel
+.claude
