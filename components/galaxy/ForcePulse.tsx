@@ -31,8 +31,8 @@ const RING_SEGMENTS = 64;
  */
 function resolveCSSColorToThree(cssVar: string): THREE.Color {
   if (typeof document === "undefined") {
-    // SSR guard — return a sensible fallback
-    return new THREE.Color("#ffffff");
+    // SSR guard — fg-primary archive cream (oklch 0.94 0.005 80)
+    return new THREE.Color("#ece8d8");
   }
   const raw = getComputedStyle(document.documentElement)
     .getPropertyValue(cssVar)

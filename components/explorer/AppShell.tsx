@@ -90,6 +90,7 @@ export function AppShell({
 
   return (
     <div id="main-content" className="relative h-[100dvh] w-full bg-bg-canvas">
+      <h1 className="sr-only">Holocron — Star Wars universe explorer</h1>
       {/* Desktop layout (md+): three-column grid + timeline row */}
       <div className="hidden h-full flex-col md:flex">
         <div className="grid min-h-0 flex-1 grid-cols-[64px_1fr_360px] overflow-hidden">

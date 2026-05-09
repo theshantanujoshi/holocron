@@ -74,7 +74,7 @@ export function Datapad({ entities, planetImages = null, personImages = null }: 
               onClick={() => setCrawlOpen(true)}
               aria-label="Play opening crawl for this entity"
               title="Play crawl"
-              className="flex h-7 items-center gap-1.5 rounded border border-border-faint px-2 text-fg-muted transition-colors hover:border-border-line hover:text-fg-primary"
+              className="flex h-9 items-center gap-1.5 rounded border border-border-faint px-2.5 text-fg-muted transition-colors hover:border-border-line hover:text-fg-primary"
             >
               <Play size={11} weight="regular" />
               <span className="font-mono text-2xs uppercase tracking-[0.14em]">Crawl</span>
@@ -111,7 +111,7 @@ export function Datapad({ entities, planetImages = null, personImages = null }: 
                     disabled={disabled}
                     onClick={() => setView(id)}
                     className={cn(
-                      "flex h-7 w-7 items-center justify-center rounded border transition-colors",
+                      "flex h-9 w-9 items-center justify-center rounded border transition-colors",
                       isActive
                         ? "border-accent-faint bg-accent-bg/40 text-fg-strong"
                         : "border-border-faint text-fg-muted hover:border-border-line hover:text-fg-primary",

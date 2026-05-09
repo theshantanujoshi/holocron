@@ -426,7 +426,9 @@ export function LineageView({ graph }: Props) {
       } catch (err) {
         // Defensive: certain teardown paths in 3d-force-graph throw on
         // already-disposed renderers in HMR; swallow rather than crash.
-        console.warn("[lineage] graph teardown threw", err);
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[lineage] graph teardown threw", err);
+        }
       }
       graphRef.current = null;
       // The lib appends its <canvas> as a child of `el`; ensure cleanup if
