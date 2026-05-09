@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "motion/react";
 import {
   GlobeHemisphereWest,
   Clock,
@@ -13,6 +14,8 @@ import { useSelection, type ViewMode } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { AtlasToggle } from "./AtlasToggle";
 import { AudioToggle } from "./AudioToggle";
+
+const TAB_SPRING = { type: "spring", stiffness: 380, damping: 32, mass: 0.8 } as const;
 
 const VIEWS: Array<{ id: ViewMode; label: string; Icon: typeof GlobeHemisphereWest }> = [
   { id: "galaxy", label: "Galaxy", Icon: GlobeHemisphereWest },
@@ -29,6 +32,8 @@ export function NavRail() {
   const startRoute = useSelection((s) => s.startRoute);
   const routeMode = useSelection((s) => s.route.mode);
   const routeActive = routeMode !== "idle";
+  const reduceMotion = useReducedMotion();
+  const tabTransition = reduceMotion ? { duration: 0 } : TAB_SPRING;
 
   return (
     <>
@@ -69,13 +74,19 @@ export function NavRail() {
                 type="button"
                 onClick={() => setView(id)}
                 className={cn(
-                  "rounded-md p-2.5 transition-colors",
-                  view === id
-                    ? "bg-accent-bg/60 text-fg-strong"
-                    : "text-fg-muted hover:bg-bg-panel/40 hover:text-fg-primary"
+                  "relative rounded-md p-2.5 transition-colors",
+                  view === id ? "text-fg-strong" : "text-fg-muted hover:text-fg-primary"
                 )}
               >
-                <Icon size={16} weight="regular" />
+                {view === id && (
+                  <motion.span
+                    layoutId="nav-tab-indicator-desktop"
+                    aria-hidden
+                    className="absolute inset-0 rounded-md bg-accent-bg/60"
+                    transition={tabTransition}
+                  />
+                )}
+                <Icon size={16} weight="regular" className="relative" />
               </button>
             ))}
           </div>
@@ -152,14 +163,20 @@ export function NavRail() {
                 type="button"
                 onClick={() => setView(id)}
                 className={cn(
-                  "flex flex-shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors",
-                  view === id
-                    ? "bg-accent-bg/60 text-fg-strong"
-                    : "text-fg-muted hover:bg-bg-panel/40 hover:text-fg-primary"
+                  "relative flex flex-shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors",
+                  view === id ? "text-fg-strong" : "text-fg-muted hover:text-fg-primary"
                 )}
               >
-                <Icon size={14} weight="regular" />
-                <span className="font-mono text-2xs uppercase tracking-[0.12em]">{label}</span>
+                {view === id && (
+                  <motion.span
+                    layoutId="nav-tab-indicator-mobile"
+                    aria-hidden
+                    className="absolute inset-0 rounded-md bg-accent-bg/60"
+                    transition={tabTransition}
+                  />
+                )}
+                <Icon size={14} weight="regular" className="relative" />
+                <span className="relative font-mono text-2xs uppercase tracking-[0.12em]">{label}</span>
               </button>
             ))}
           </div>

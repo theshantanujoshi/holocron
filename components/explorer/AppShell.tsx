@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import type { Battle, Entity, Hyperlane, TimelineEvent, War } from "@/lib/schema";
 import type { PlacedPlanet } from "@/lib/data/positions";
 import type { LineageGraph } from "@/lib/data/loadLineage";
@@ -40,6 +41,22 @@ type Props = {
   personImages?: Map<string, PersonImage> | null;
 };
 
+// Animation choreography
+// ──────────────────────
+// Chrome (NavRail / Datapad / TimelineScrubber) slides into place once on
+// mount with a 60-90ms stagger. View swaps (Galaxy ↔ Timeline ↔ Lineage)
+// crossfade with a small scale to telegraph "depth swap" — distinct from
+// the entity-level hyperspace streak. Reduced-motion bypasses both with
+// `initial={false}` and zero-duration transitions.
+const EASE_OUT_QUART = [0.16, 1, 0.3, 1] as const;
+
+const VIEW_TRANSITION = { duration: 0.32, ease: EASE_OUT_QUART };
+const VIEW_VARIANTS = {
+  initial: { opacity: 0, scale: 1.02 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.98 }
+};
+
 export function AppShell({
   entities,
   planets,
@@ -56,6 +73,20 @@ export function AppShell({
   const startRoute = useSelection((s) => s.startRoute);
   const clearRoute = useSelection((s) => s.clearRoute);
   const routeMode = useSelection((s) => s.route.mode);
+  const reduceMotion = useReducedMotion();
+
+  // Build Motion props for chrome regions. Reduced-motion → `initial={false}`
+  // skips the entrance entirely and zero-duration ensures no transition.
+  const chrome = (axis: "x" | "y", from: number, delay: number) => ({
+    initial: reduceMotion ? (false as const) : { opacity: 0, [axis]: from },
+    animate: { opacity: 1, x: 0, y: 0 },
+    transition: {
+      duration: reduceMotion ? 0 : 0.36,
+      delay: reduceMotion ? 0 : delay,
+      ease: EASE_OUT_QUART
+    }
+  });
+  const viewTransition = reduceMotion ? { duration: 0 } : VIEW_TRANSITION;
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -94,64 +125,98 @@ export function AppShell({
       {/* Desktop layout (md+): three-column grid + timeline row */}
       <div className="hidden h-full flex-col md:flex">
         <div className="grid min-h-0 flex-1 grid-cols-[64px_1fr_360px] overflow-hidden">
-          <NavRail />
-          <div className="relative overflow-hidden">
-            {view === "galaxy" && (
-              <GalaxyCanvas
-                planets={planets}
-                lanes={lanes}
-                entities={entities}
-                lineage={lineage}
-              />
-            )}
-            {view === "timeline" && (
-              <TimelineView
-                planets={planets}
-                lanes={lanes}
-                events={events}
-                entities={entities}
-                wars={wars}
-                battles={battles}
-              />
-            )}
-            {view === "lineage" &&
-              (lineage ? <LineageView graph={lineage} /> : <LineagePlaceholder />)}
-          </div>
-          <Datapad
-            entities={entities}
-            planetImages={planetImages}
-            personImages={personImages}
-          />
+          <motion.div {...chrome("x", -32, 0)}>
+            <NavRail />
+          </motion.div>
+          <motion.div className="relative overflow-hidden" {...chrome("y", 16, 0.18)}>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={view}
+                variants={VIEW_VARIANTS}
+                initial={reduceMotion ? false : "initial"}
+                animate="animate"
+                exit="exit"
+                transition={viewTransition}
+                className="absolute inset-0"
+              >
+                {view === "galaxy" && (
+                  <GalaxyCanvas
+                    planets={planets}
+                    lanes={lanes}
+                    entities={entities}
+                    lineage={lineage}
+                  />
+                )}
+                {view === "timeline" && (
+                  <TimelineView
+                    planets={planets}
+                    lanes={lanes}
+                    events={events}
+                    entities={entities}
+                    wars={wars}
+                    battles={battles}
+                  />
+                )}
+                {view === "lineage" &&
+                  (lineage ? <LineageView graph={lineage} /> : <LineagePlaceholder />)}
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
+          <motion.div {...chrome("x", 32, 0.06)}>
+            <Datapad
+              entities={entities}
+              planetImages={planetImages}
+              personImages={personImages}
+            />
+          </motion.div>
         </div>
-        <TimelineScrubber />
+        <motion.div {...chrome("y", 24, 0.12)}>
+          <TimelineScrubber />
+        </motion.div>
       </div>
 
       {/* Mobile layout (< md): stacked column */}
       <div className="flex h-full flex-col md:hidden">
-        <NavRail />
-        <div className="relative min-h-0 flex-1 overflow-hidden">
-          {view === "galaxy" && (
-            <GalaxyCanvas
-              planets={planets}
-              lanes={lanes}
-              entities={entities}
-              lineage={lineage}
-              mobile
-            />
-          )}
-          {view === "timeline" && (
-            <TimelineView
-              planets={planets}
-              lanes={lanes}
-              events={events}
-              entities={entities}
-              wars={wars}
-              battles={battles}
-            />
-          )}
-          {view === "lineage" && <LineagePlaceholder />}
-        </div>
-        <TimelineScrubber />
+        <motion.div {...chrome("y", -16, 0)}>
+          <NavRail />
+        </motion.div>
+        <motion.div className="relative min-h-0 flex-1 overflow-hidden" {...chrome("y", 16, 0.12)}>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={view}
+              variants={VIEW_VARIANTS}
+              initial={reduceMotion ? false : "initial"}
+              animate="animate"
+              exit="exit"
+              transition={viewTransition}
+              className="absolute inset-0"
+            >
+              {view === "galaxy" && (
+                <GalaxyCanvas
+                  planets={planets}
+                  lanes={lanes}
+                  entities={entities}
+                  lineage={lineage}
+                  mobile
+                />
+              )}
+              {view === "timeline" && (
+                <TimelineView
+                  planets={planets}
+                  lanes={lanes}
+                  events={events}
+                  entities={entities}
+                  wars={wars}
+                  battles={battles}
+                />
+              )}
+              {view === "lineage" && <LineagePlaceholder />}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+        <motion.div {...chrome("y", 24, 0.18)}>
+          <TimelineScrubber />
+        </motion.div>
         <DatapadDrawer
           entities={entities}
           planetImages={planetImages}
