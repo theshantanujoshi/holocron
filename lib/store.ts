@@ -13,6 +13,21 @@ export type RouteState = {
   destinationId: string | null;
 };
 
+export type StoryState = {
+  /** Active story id (e.g. "rise-of-vader"), or null when no story is playing. */
+  playingStoryId: string | null;
+  /** Zero-based beat index. -1 = intro card. beats.length = outro card. */
+  beatIndex: number;
+  paused: boolean;
+};
+
+export type CinematicState = {
+  /** Active interrupt id, or null. The dispatcher sets this; the overlay clears it after duration. */
+  activeId: string | null;
+  /** Set of cinematic ids that have already fired this session/story run. */
+  fired: ReadonlySet<string>;
+};
+
 export type SelectionState = {
   entityId: string | null;
   entityType: EntityType | null;
@@ -24,6 +39,8 @@ export type SelectionState = {
   pivoting: boolean;
   holoStage: boolean;
   route: RouteState;
+  story: StoryState;
+  cinematic: CinematicState;
 };
 
 type SelectionActions = {
@@ -40,12 +57,33 @@ type SelectionActions = {
   pickEndpoint: (planetId: string) => void;
   clearRoute: () => void;
   reverseRoute: () => void;
+  // Story Mode
+  playStory: (id: string) => void;
+  pauseStory: () => void;
+  resumeStory: () => void;
+  setStoryBeat: (i: number) => void;
+  endStory: () => void;
+  // Cinematic interrupts
+  fireCinematic: (id: string) => void;
+  clearCinematic: () => void;
+  resetCinematicFired: () => void;
 };
 
 const INITIAL_ROUTE: RouteState = {
   mode: "idle",
   originId: null,
   destinationId: null
+};
+
+const INITIAL_STORY: StoryState = {
+  playingStoryId: null,
+  beatIndex: -1,
+  paused: false
+};
+
+const INITIAL_CINEMATIC: CinematicState = {
+  activeId: null,
+  fired: new Set<string>()
 };
 
 const INITIAL: SelectionState = {
@@ -58,7 +96,9 @@ const INITIAL: SelectionState = {
   searchOpen: false,
   pivoting: false,
   holoStage: false,
-  route: INITIAL_ROUTE
+  route: INITIAL_ROUTE,
+  story: INITIAL_STORY,
+  cinematic: INITIAL_CINEMATIC
 };
 
 export const useSelection = create<SelectionState & SelectionActions>((set) => ({
@@ -100,5 +140,36 @@ export const useSelection = create<SelectionState & SelectionActions>((set) => (
       return {
         route: { mode: "shown", originId: destinationId, destinationId: originId }
       };
-    })
+    }),
+
+  // Story Mode ──────────────────────────────────────────────────────────────
+  playStory: (id) =>
+    set({
+      story: { playingStoryId: id, beatIndex: -1, paused: false },
+      cinematic: { activeId: null, fired: new Set<string>() }
+    }),
+  pauseStory: () =>
+    set((s) => ({ story: { ...s.story, paused: true } })),
+  resumeStory: () =>
+    set((s) => ({ story: { ...s.story, paused: false } })),
+  setStoryBeat: (i) =>
+    set((s) => ({ story: { ...s.story, beatIndex: i } })),
+  endStory: () =>
+    set({
+      story: { playingStoryId: null, beatIndex: -1, paused: false },
+      cinematic: { activeId: null, fired: new Set<string>() }
+    }),
+
+  // Cinematic interrupts ────────────────────────────────────────────────────
+  fireCinematic: (id) =>
+    set((s) => {
+      if (s.cinematic.fired.has(id)) return s;
+      const next = new Set(s.cinematic.fired);
+      next.add(id);
+      return { cinematic: { activeId: id, fired: next } };
+    }),
+  clearCinematic: () =>
+    set((s) => ({ cinematic: { ...s.cinematic, activeId: null } })),
+  resetCinematicFired: () =>
+    set({ cinematic: { activeId: null, fired: new Set<string>() } })
 }));

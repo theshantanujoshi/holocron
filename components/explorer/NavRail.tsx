@@ -7,7 +7,8 @@ import {
   TreeStructure,
   MagnifyingGlass,
   CaretLeft,
-  Path
+  Path,
+  Play
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useSelection, type ViewMode } from "@/lib/store";
@@ -32,6 +33,9 @@ export function NavRail() {
   const startRoute = useSelection((s) => s.startRoute);
   const routeMode = useSelection((s) => s.route.mode);
   const routeActive = routeMode !== "idle";
+  const playStory = useSelection((s) => s.playStory);
+  const playingStoryId = useSelection((s) => s.story.playingStoryId);
+  const storyActive = playingStoryId !== null;
   const reduceMotion = useReducedMotion();
   const tabTransition = reduceMotion ? { duration: 0 } : TAB_SPRING;
 
@@ -110,6 +114,25 @@ export function NavRail() {
             title="Plot a hyperspace route · R"
           >
             <Path size={16} weight="regular" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (view !== "galaxy") setView("galaxy");
+              playStory("rise-of-vader");
+            }}
+            className={cn(
+              "rounded-md border p-2.5 transition-colors",
+              storyActive
+                ? "border-accent/60 bg-accent-bg/50 text-fg-strong"
+                : "border-border-faint text-fg-muted hover:border-border-line hover:text-fg-primary"
+            )}
+            aria-pressed={storyActive}
+            aria-label="Play story: Rise of Vader"
+            title="Play story · Rise of Vader"
+          >
+            <Play size={16} weight="regular" />
           </button>
 
           <button
@@ -207,6 +230,23 @@ export function NavRail() {
             aria-label="Plot a hyperspace route"
           >
             <Path size={14} weight="regular" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (view !== "galaxy") setView("galaxy");
+              playStory("rise-of-vader");
+            }}
+            className={cn(
+              "rounded-md border p-2.5 transition-colors",
+              storyActive
+                ? "border-accent/60 bg-accent-bg/50 text-fg-strong"
+                : "border-border-faint bg-bg-panel/40 text-fg-muted hover:border-border-line hover:text-fg-primary"
+            )}
+            aria-pressed={storyActive}
+            aria-label="Play story: Rise of Vader"
+          >
+            <Play size={14} weight="regular" />
           </button>
           <button
             type="button"

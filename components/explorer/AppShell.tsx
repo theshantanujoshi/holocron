@@ -28,6 +28,7 @@ import { SearchPalette } from "./SearchPalette";
 import { HyperspaceOverlay } from "./HyperspaceOverlay";
 import { AudioCueDispatcher } from "./AudioCueDispatcher";
 import { HoloStage } from "@/components/holostage";
+import { EventInterruptDispatcher, EventInterruptOverlay, StoryMode } from "@/components/cinematic";
 
 type Props = {
   entities: Entity[];
@@ -228,6 +229,9 @@ export function AppShell({
       <HyperspaceOverlay />
       <AudioCueDispatcher />
       <HoloStage entities={entities} lineage={lineage} personImages={personImages} />
+      <EventInterruptDispatcher />
+      <EventInterruptOverlay />
+      <StoryMode />
     </div>
   );
 }
