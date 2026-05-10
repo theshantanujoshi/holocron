@@ -5,9 +5,9 @@ import "./globals.css";
 
 const SITE_ORIGIN = "https://adhit-r.github.io";
 const SITE_URL = `${SITE_ORIGIN}/holocron`;
-const TITLE = "Holocron — A Star Wars universe explorer";
+const TITLE = "Holocron — A 3D Star Wars universe explorer, in your browser";
 const DESCRIPTION =
-  "A 3D Star Wars universe explorer. Galaxy, timeline, Force-lineage, and datapad — one selection drives all four. Built with Next.js, React Three Fiber, and Tailwind. Canon and Legends, real public data, no backend.";
+  "Galaxy, timeline, Force-lineage, datapad — pick anything, see it everywhere. 25,000 years of canon + Legends, fully 3D, no backend.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
