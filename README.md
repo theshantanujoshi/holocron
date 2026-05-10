@@ -9,7 +9,7 @@
 
 A unified explorer for the Star Wars universe. Four coupled views — a 3D galaxy, a temporal scrubber across 25,000 years of history, a Force-lineage graph, and an entity datapad — driven by a single shared selection state. Pick anything, see it everywhere.
 
-> **Live:** https://adhit-r.github.io/holocron/
+> **Live:** Cloudflare Pages (primary, fast). GitHub Pages mirror at https://adhit-r.github.io/holocron/ (fallback).
 >
 > **Repo:** https://github.com/adhit-r/holocron
 >
