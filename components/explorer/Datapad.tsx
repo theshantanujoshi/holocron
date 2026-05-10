@@ -2,12 +2,13 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { useMemo, useState, useEffect, useRef } from "react";
-import { GlobeHemisphereWest, Clock, TreeStructure, Play, Path } from "@phosphor-icons/react";
+import { GlobeHemisphereWest, Clock, TreeStructure, Play, Path, FilmStrip } from "@phosphor-icons/react";
 import type { Entity } from "@/lib/schema";
 import { useSelection, type ViewMode } from "@/lib/store";
 import { formatYear, cn } from "@/lib/utils";
 import { EntityCrawl } from "@/components/EntityCrawl";
 import { loadAllQuotesFor } from "@/lib/data/loadQuotes";
+import { CLIP_LINKS_MAP } from "@/lib/data/clip-links";
 import type { Quote } from "@/lib/data/quotes";
 import type { PlanetImage } from "@/lib/data/loadPlanetImages";
 import type { PersonImage } from "@/lib/data/loadPersonImages";
@@ -79,6 +80,19 @@ export function Datapad({ entities, planetImages = null, personImages = null }: 
               <Play size={11} weight="regular" />
               <span className="font-mono text-2xs uppercase tracking-[0.14em]">Crawl</span>
             </button>
+          )}
+          {entity && entity.type === "film" && CLIP_LINKS_MAP.get(entity.id) && (
+            <a
+              href={CLIP_LINKS_MAP.get(entity.id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Watch official clip on YouTube"
+              title="Watch official clip"
+              className="flex h-9 items-center gap-1.5 rounded border border-border-faint px-2.5 text-fg-muted transition-colors hover:border-border-line hover:text-fg-primary"
+            >
+              <FilmStrip size={12} weight="regular" />
+              <span className="font-mono text-2xs uppercase tracking-[0.14em]">Clip</span>
+            </a>
           )}
           {entity && (
             <button

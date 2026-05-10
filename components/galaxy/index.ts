@@ -4,6 +4,7 @@ export { Planet } from "./Planet";
 export { PlotRouteHud } from "./PlotRouteHud";
 export { RouteOverlay } from "./RouteOverlay";
 export { ShipVoyage } from "./ShipVoyage";
+export { ShipTraffic } from "./ShipTraffic";
 export { SectorGrid } from "./SectorGrid";
 export { ForcePulse } from "./ForcePulse";
 export type { ForceSide } from "./ForcePulse";
