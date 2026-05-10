@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: `${SITE_URL}/opengraph-image.png`,
+        url: `${SITE_URL}/og.png`,
         width: 1200,
         height: 630,
         alt: "Holocron — A 3D Star Wars universe explorer"
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     creator: "@adhit_r",
-    images: [`${SITE_URL}/opengraph-image.png`]
+    images: [`${SITE_URL}/og.png`]
   },
   robots: {
     index: true,
