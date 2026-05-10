@@ -2,12 +2,16 @@
 
 **The galaxy, indexed. Across space, time, and lineage.**
 
+![Holocron Open Graph card](https://adhit-r.github.io/holocron/opengraph-image.png)
+
 [![Deploy](https://github.com/adhit-r/holocron/actions/workflows/deploy.yml/badge.svg)](https://github.com/adhit-r/holocron/actions/workflows/deploy.yml)
 [![Open Issues](https://img.shields.io/github/issues/adhit-r/holocron)](https://github.com/adhit-r/holocron/issues)
 [![Good first issues](https://img.shields.io/github/issues/adhit-r/holocron/good%20first%20issue?label=good%20first%20issue&color=7057ff)](https://github.com/adhit-r/holocron/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A unified explorer for the Star Wars universe. Four coupled views — a 3D galaxy, a temporal scrubber across 25,000 years of history, a Force-lineage graph, and an entity datapad — driven by a single shared selection state. Pick anything, see it everywhere.
+
+> **Demo video:** Render a 30-second walkthrough locally with `cd remotion && npm install && npm run render:gif`. See [`remotion/README.md`](remotion/README.md) for details. Drop the rendered GIF here once produced.
 
 > **Live:** Cloudflare Pages (primary, fast). GitHub Pages mirror at https://adhit-r.github.io/holocron/ (fallback).
 >

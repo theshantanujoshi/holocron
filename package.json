@@ -5,7 +5,8 @@
   "description": "Holocron — Star Wars universe explorer. Galaxy + timeline + lineage + datapad, one selection state.",
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build",
+    "build": "next build && npm run postbuild:og",
+    "postbuild:og": "node -e \"const fs=require('fs'),p=require('path');const src=p.join('out','opengraph-image');const dst=p.join('out','opengraph-image.png');if(fs.existsSync(src)){fs.copyFileSync(src,dst);console.log('[og] copied',src,'->',dst);}\"",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "build:kb": "tsx scripts/build-kb.ts",

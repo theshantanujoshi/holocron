@@ -1,0 +1,27 @@
+{
+  "name": "holocron-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remotion composition that renders the Holocron 30-second demo video. Run locally to produce demo.mp4 / demo.gif for the README and social posts.",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts HolocronDemo demo.mp4",
+    "render:gif": "remotion render src/index.ts HolocronDemo demo.gif --image-format=png --pixel-format=yuv420p",
+    "render:webm": "remotion render src/index.ts HolocronDemo demo.webm --codec=vp9"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.255",
+    "@remotion/cli": "^4.0.255",
+    "@remotion/renderer": "^4.0.255",
+    "@remotion/zod-types": "^4.0.255",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.255",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.7.2"
+  }
+}
