@@ -13,11 +13,9 @@
     "@remotion/bundler": "^4.0.255",
     "@remotion/cli": "^4.0.255",
     "@remotion/renderer": "^4.0.255",
-    "@remotion/zod-types": "^4.0.255",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "remotion": "^4.0.255",
-    "zod": "^3.24.1"
+    "remotion": "^4.0.255"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",

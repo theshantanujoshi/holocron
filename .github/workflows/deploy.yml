@@ -1,11 +1,8 @@
-name: Deploy to GitHub Pages (fallback)
+name: Deploy to GitHub Pages
 
-# Primary host is Cloudflare Pages (auto-deploys on push to main via the
-# Cloudflare GitHub integration). This workflow stays as a manual fallback
-# so the GH Pages mirror at https://adhit-r.github.io/holocron/ can still
-# be re-deployed if Cloudflare ever has an outage. Trigger from the
-# Actions tab → "Run workflow".
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
