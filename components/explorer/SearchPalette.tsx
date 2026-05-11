@@ -50,6 +50,20 @@ function startSemanticWarmup(): void {
     .catch(() => setIndexStatus("error"));
 }
 
+type FilterableType = Entity["type"];
+
+const FILTER_TYPES: Array<{ id: FilterableType; label: string }> = [
+  { id: "person", label: "People" },
+  { id: "planet", label: "Planets" },
+  { id: "ship", label: "Ships" },
+  { id: "vehicle", label: "Vehicles" },
+  { id: "species", label: "Species" },
+  { id: "film", label: "Films" },
+  { id: "comic", label: "Comics" },
+  { id: "game", label: "Games" },
+  { id: "event", label: "Events" }
+];
+
 export function SearchPalette({ entities }: Props) {
   const open = useSelection((s) => s.searchOpen);
   const setOpen = useSelection((s) => s.setSearchOpen);
@@ -59,7 +73,27 @@ export function SearchPalette({ entities }: Props) {
   const [active, setActive] = useState(0);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<IndexStatus>(indexStatus);
+  const [typeFilter, setTypeFilter] = useState<Set<FilterableType>>(new Set());
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Filter hits client-side after the search returns. Filter resets on close.
+  const filteredHits =
+    typeFilter.size === 0 ? hits : hits.filter((h) => typeFilter.has(h.type));
+
+  function toggleType(t: FilterableType) {
+    setTypeFilter((prev) => {
+      const next = new Set(prev);
+      if (next.has(t)) next.delete(t);
+      else next.add(t);
+      return next;
+    });
+    setActive(0);
+  }
+
+  function clearFilter() {
+    setTypeFilter(new Set());
+    setActive(0);
+  }
 
   // Subscribe to module-level status changes so all opens see fresh state.
   useEffect(() => {
@@ -79,6 +113,7 @@ export function SearchPalette({ entities }: Props) {
       setQuery("");
       setHits([]);
       setActive(0);
+      setTypeFilter(new Set());
     }
   }, [open]);
 
@@ -125,20 +160,20 @@ export function SearchPalette({ entities }: Props) {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActive((a) => Math.min(a + 1, hits.length - 1));
+        setActive((a) => Math.min(a + 1, filteredHits.length - 1));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         setActive((a) => Math.max(a - 1, 0));
       } else if (e.key === "Enter") {
         e.preventDefault();
-        const h = hits[active];
+        const h = filteredHits[active];
         if (h) choose(h);
       } else if (e.key === "Escape") {
         e.preventDefault();
         setOpen(false);
       }
     },
-    [hits, active, choose, setOpen]
+    [filteredHits, active, choose, setOpen]
   );
 
   return (
@@ -185,13 +220,49 @@ export function SearchPalette({ entities }: Props) {
 
             <SemanticStatusRow status={status} />
 
+            <div className="flex flex-wrap items-center gap-1.5 border-b border-border-faint px-4 py-2">
+              <span className="font-mono text-2xs uppercase tracking-[0.18em] text-fg-dim">
+                Filter
+              </span>
+              {FILTER_TYPES.map((t) => {
+                const active = typeFilter.has(t.id);
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => toggleType(t.id)}
+                    className={cn(
+                      "rounded-full border px-2 py-0.5 font-mono text-2xs uppercase tracking-[0.12em] transition-colors",
+                      active
+                        ? "border-accent-faint bg-accent-bg/50 text-fg-strong"
+                        : "border-border-faint text-fg-muted hover:border-border-line hover:text-fg-primary"
+                    )}
+                    aria-pressed={active}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+              {typeFilter.size > 0 && (
+                <button
+                  type="button"
+                  onClick={clearFilter}
+                  className="ml-auto font-mono text-2xs uppercase tracking-[0.16em] text-fg-dim transition-colors hover:text-fg-primary"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
             <div className="max-h-[55vh] overflow-y-auto">
               {!query.trim() && <SearchEmpty />}
-              {query.trim() && hits.length === 0 && !busy && <SearchNoMatch query={query} />}
+              {query.trim() && filteredHits.length === 0 && !busy && (
+                <SearchNoMatch query={query} filtered={typeFilter.size > 0} />
+              )}
 
-              {hits.length > 0 && (
+              {filteredHits.length > 0 && (
                 <ul role="listbox" aria-label="Search results">
-                  {hits.map((hit, i) => (
+                  {filteredHits.map((hit, i) => (
                     <li key={hit.id}>
                       <button
                         type="button"
@@ -237,7 +308,13 @@ export function SearchPalette({ entities }: Props) {
             </div>
 
             <footer className="flex items-center justify-between border-t border-border-faint px-4 py-2 font-mono text-2xs uppercase tracking-[0.16em] text-fg-dim">
-              <span>{hits.length > 0 ? `${hits.length} matches` : "type to search"}</span>
+              <span>
+                {hits.length > 0
+                  ? typeFilter.size > 0 && filteredHits.length !== hits.length
+                    ? `${filteredHits.length} of ${hits.length} matches`
+                    : `${hits.length} matches`
+                  : "type to search"}
+              </span>
               <span className="flex items-center gap-3">
                 <span>↑↓ navigate</span>
                 <span>↵ select</span>
@@ -305,14 +382,15 @@ function SearchEmpty() {
   );
 }
 
-function SearchNoMatch({ query }: { query: string }) {
+function SearchNoMatch({ query, filtered }: { query: string; filtered: boolean }) {
   return (
     <div className="px-4 py-6">
       <p className="text-sm text-fg-primary">
-        No archive match for <span className="text-accent">"{query}"</span>.
+        No archive match for <span className="text-accent">"{query}"</span>
+        {filtered ? <span className="text-fg-muted"> in the active filter</span> : null}.
       </p>
       <p className="mt-1 font-mono text-2xs uppercase tracking-[0.16em] text-fg-dim">
-        Try a planet, person, ship, or event.
+        {filtered ? "Clear the filter or try a broader query." : "Try a planet, person, ship, or event."}
       </p>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import type { Battle, Entity, Hyperlane, TimelineEvent, War } from "@/lib/schema";
 import type { PlacedPlanet } from "@/lib/data/positions";
 import type { LineageGraph } from "@/lib/data/loadLineage";
@@ -27,6 +28,7 @@ import { SearchPalette } from "./SearchPalette";
 import { HyperspaceOverlay } from "./HyperspaceOverlay";
 import { AudioCueDispatcher } from "./AudioCueDispatcher";
 import { HoloStage } from "@/components/holostage";
+import { EventInterruptDispatcher, EventInterruptOverlay, StoryMode } from "@/components/cinematic";
 
 type Props = {
   entities: Entity[];
@@ -38,6 +40,22 @@ type Props = {
   battles?: Battle[];
   planetImages?: Map<string, PlanetImage> | null;
   personImages?: Map<string, PersonImage> | null;
+};
+
+// Animation choreography
+// ──────────────────────
+// Chrome (NavRail / Datapad / TimelineScrubber) slides into place once on
+// mount with a 60-90ms stagger. View swaps (Galaxy ↔ Timeline ↔ Lineage)
+// crossfade with a small scale to telegraph "depth swap" — distinct from
+// the entity-level hyperspace streak. Reduced-motion bypasses both with
+// `initial={false}` and zero-duration transitions.
+const EASE_OUT_QUART = [0.16, 1, 0.3, 1] as const;
+
+const VIEW_TRANSITION = { duration: 0.32, ease: EASE_OUT_QUART };
+const VIEW_VARIANTS = {
+  initial: { opacity: 0, scale: 1.02 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.98 }
 };
 
 export function AppShell({
@@ -91,6 +109,7 @@ export function AppShell({
 
   return (
     <div id="main-content" className="relative h-[100dvh] w-full bg-bg-canvas">
+      <h1 className="sr-only">Holocron — Star Wars universe explorer</h1>
       {/* Desktop layout (md+): three-column grid + timeline row */}
       <div className="hidden h-full flex-col md:flex">
         <div className="grid min-h-0 flex-1 grid-cols-[64px_1fr_minmax(260px,22vw)] overflow-hidden">
@@ -163,6 +182,9 @@ export function AppShell({
       <HyperspaceOverlay />
       <AudioCueDispatcher />
       <HoloStage entities={entities} lineage={lineage} personImages={personImages} />
+      <EventInterruptDispatcher />
+      <EventInterruptOverlay />
+      <StoryMode />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { memo, useMemo, useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -10,7 +10,7 @@ type Props = {
   speed?: number;
 };
 
-export function Starfield({ count = 12000, radius = 600, speed = 0.0008 }: Props) {
+function StarfieldImpl({ count = 12000, radius = 600, speed = 0.0008 }: Props) {
   const meshRef = useRef<THREE.Points>(null);
 
   const geometry = useMemo(() => {
@@ -62,6 +62,9 @@ export function Starfield({ count = 12000, radius = 600, speed = 0.0008 }: Props
     []
   );
 
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  useEffect(() => () => material.dispose(), [material]);
+
   const { gl } = useThree();
   const reduce = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -80,3 +83,5 @@ export function Starfield({ count = 12000, radius = 600, speed = 0.0008 }: Props
 
   return <points ref={meshRef} geometry={geometry} material={material} />;
 }
+
+export const Starfield = memo(StarfieldImpl);

@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { Entity } from "@/lib/schema";
 import type { LineageGraph } from "@/lib/data/loadLineage";
+import { sideAtEra } from "@/lib/data/force-transitions";
 import { fragmentShader, vertexShader } from "./HolographicFigure.shaders";
 
 /**
@@ -43,6 +44,9 @@ type Props = {
   intensity?: number;
   side?: Side;
   lineage?: LineageGraph;
+  /** Current era year (BBY = negative, ABY = positive). When provided, the
+   *  era-aware transition table is consulted before the BFS classifier. */
+  era?: number;
 };
 
 // Holo-blue accent for Jedi / civilians: oklch(0.78 0.13 235) ≈ a luminous
@@ -127,9 +131,16 @@ function classifyFromLineage(entity: Entity, graph: LineageGraph): Side {
 function resolveSide(
   entity: Entity,
   override: Side | undefined,
-  graph: LineageGraph | undefined
+  graph: LineageGraph | undefined,
+  era: number | undefined
 ): Side {
   if (override) return override;
+  // Era-aware lookup takes precedence over the BFS classifier when the person
+  // has known transition data.
+  if (era !== undefined) {
+    const eraResolved = sideAtEra(entity.id, era);
+    if (eraResolved !== null) return eraResolved;
+  }
   if (graph) return classifyFromLineage(entity, graph);
   return "civilian";
 }
@@ -145,15 +156,16 @@ export function HolographicFigure({
   scale = 1,
   intensity = 1,
   side,
-  lineage
+  lineage,
+  era
 }: Props) {
   const groupRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
 
   const droid = useMemo(() => isDroid(entity), [entity]);
   const resolvedSide = useMemo(
-    () => resolveSide(entity, side, lineage),
-    [entity, side, lineage]
+    () => resolveSide(entity, side, lineage, era),
+    [entity, side, lineage, era]
   );
   const isForceUser = resolvedSide === "jedi" || resolvedSide === "sith";
 

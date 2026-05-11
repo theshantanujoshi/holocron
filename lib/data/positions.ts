@@ -23,6 +23,7 @@ const Y_VARIANCE = 4;
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
 const ANCHORS: Record<string, [number, number, number]> = {
+  // Original / Prequel-era anchors
   coruscant: [0, 0, 0],
   alderaan: [-22, 0.5, 18],
   yavin: [42, -1.2, 38],
@@ -41,8 +42,32 @@ const ANCHORS: Record<string, [number, number, number]> = {
   "polis massa": [-88, -2.0, 62],
   utapau: [88, 0.4, -88],
   felucia: [62, -0.6, 70],
-  "mygeeto": [-58, 1.0, 38],
-  cato_neimoidia: [-22, 0.6, -36]
+  mygeeto: [-58, 1.0, 38],
+  cato_neimoidia: [-22, 0.6, -36],
+
+  // Sequel-era anchors. Coordinates approximate per Wookieepedia / Star Wars
+  // Galactic Atlas; positions chosen so post-ROTJ Falcon voyages and
+  // First Order war theatres render with proper geographic separation.
+  // https://starwars.fandom.com/wiki/Jakku — Inner Rim Western Reaches
+  jakku: [96, 0.8, -42],
+  // https://starwars.fandom.com/wiki/Takodana — Mid Rim
+  takodana: [56, 0.4, 12],
+  // https://starwars.fandom.com/wiki/Ahch-To — Unknown Regions, far western
+  "ahch-to": [-160, -0.6, -38],
+  ahch_to: [-160, -0.6, -38],
+  // https://starwars.fandom.com/wiki/Crait — Outer Rim, mineral world
+  crait: [82, -1.4, 122],
+  // https://starwars.fandom.com/wiki/Kef_Bir — moon of Endor (placed near Endor)
+  "kef bir": [114, -0.6, 96],
+  kef_bir: [114, -0.6, 96],
+  // https://starwars.fandom.com/wiki/D'Qar — Outer Rim, Resistance base
+  "d'qar": [104, 0.2, 66],
+  dqar: [104, 0.2, 66],
+  // https://starwars.fandom.com/wiki/Exegol — Unknown Regions, Sith stronghold
+  exegol: [-184, -2.4, 168],
+  // https://starwars.fandom.com/wiki/Starkiller_Base — Unknown Regions, ice world
+  "starkiller base": [-152, 0.4, 142],
+  starkiller_base: [-152, 0.4, 142]
 };
 
 function hash01(input: string): number {

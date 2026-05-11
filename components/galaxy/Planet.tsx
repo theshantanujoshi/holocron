@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo } from "react";
+import { memo, useEffect, useRef, useState, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
@@ -12,7 +12,7 @@ type Props = {
   showLabel?: boolean;
 };
 
-export function Planet({ planet, showLabel = true }: Props) {
+function PlanetImpl({ planet, showLabel = true }: Props) {
   const ref = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const select = useSelection((s) => s.select);
@@ -34,6 +34,8 @@ export function Planet({ planet, showLabel = true }: Props) {
     });
   }, [planet.id]);
 
+  useEffect(() => () => material.dispose(), [material]);
+
   const haloMaterial = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
@@ -43,6 +45,8 @@ export function Planet({ planet, showLabel = true }: Props) {
       }),
     []
   );
+
+  useEffect(() => () => haloMaterial.dispose(), [haloMaterial]);
 
   useFrame((_, delta) => {
     if (!ref.current) return;
@@ -115,3 +119,5 @@ function hashColor(id: string): THREE.Color {
   const hue = (h % 360) / 360;
   return new THREE.Color().setHSL(hue, 0.18, 0.7);
 }
+
+export const Planet = memo(PlanetImpl);

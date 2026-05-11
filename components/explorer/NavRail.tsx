@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "motion/react";
 import {
   GlobeHemisphereWest,
   Clock,
@@ -16,6 +17,8 @@ import { cn } from "@/lib/utils";
 import { AtlasToggle } from "./AtlasToggle";
 import { AudioToggle } from "./AudioToggle";
 
+const TAB_SPRING = { type: "spring", stiffness: 380, damping: 32, mass: 0.8 } as const;
+
 const VIEWS: Array<{ id: ViewMode; label: string; Icon: typeof GlobeHemisphereWest }> = [
   { id: "galaxy", label: "Galaxy", Icon: GlobeHemisphereWest },
   { id: "timeline", label: "Timeline", Icon: Clock },
@@ -31,6 +34,11 @@ export function NavRail() {
   const startRoute = useSelection((s) => s.startRoute);
   const routeMode = useSelection((s) => s.route.mode);
   const routeActive = routeMode !== "idle";
+  const playStory = useSelection((s) => s.playStory);
+  const playingStoryId = useSelection((s) => s.story.playingStoryId);
+  const storyActive = playingStoryId !== null;
+  const reduceMotion = useReducedMotion();
+  const tabTransition = reduceMotion ? { duration: 0 } : TAB_SPRING;
 
   return (
     <>
@@ -101,6 +109,25 @@ export function NavRail() {
             title="Plot a hyperspace route · R"
           >
             <Path size={18} weight="regular" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (view !== "galaxy") setView("galaxy");
+              playStory("rise-of-vader");
+            }}
+            className={cn(
+              "rounded-md border p-2.5 transition-colors",
+              storyActive
+                ? "border-accent/60 bg-accent-bg/50 text-fg-strong"
+                : "border-border-faint text-fg-muted hover:border-border-line hover:text-fg-primary"
+            )}
+            aria-pressed={storyActive}
+            aria-label="Play story: Rise of Vader"
+            title="Play story · Rise of Vader"
+          >
+            <Play size={16} weight="regular" />
           </button>
 
           <button

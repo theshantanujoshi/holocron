@@ -2,7 +2,7 @@
   "builtAt": "2026-05-07T17:57:30.633Z",
   "durationMs": 664,
   "counts": {
-    "total": 260,
+    "total": 318,
     "invalid": 0,
     "coordsMatched": 57,
     "byType": {
@@ -40,5 +40,6 @@
   "planetImages": 39,
   "planetImagesBuiltAt": "2026-05-07T20:26:24.158Z",
   "personImages": 34,
-  "personImagesBuiltAt": "2026-05-07T20:27:38.751Z"
+  "personImagesBuiltAt": "2026-05-07T20:27:38.751Z",
+  "sequelPlanetsAdded": 8
 }

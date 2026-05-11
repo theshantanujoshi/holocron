@@ -155,8 +155,9 @@ function TitleCard() {
       className="absolute inset-0 grid place-items-center"
       style={{ willChange: "transform, opacity" }}
     >
-      <div className="flex flex-col items-center gap-4">
-        <h1
+      <div className="flex flex-col items-center gap-4" role="presentation">
+        <p
+          aria-hidden
           className="font-sans font-medium tracking-[-0.04em]"
           style={{
             fontSize: "clamp(64px, 12vw, 200px)",
@@ -166,7 +167,7 @@ function TitleCard() {
           }}
         >
           HOLOCRON
-        </h1>
+        </p>
         <p className="font-mono text-2xs uppercase tracking-[0.42em] text-fg-muted md:text-xs">
           Archive of the galaxy
         </p>

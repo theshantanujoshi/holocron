@@ -18,6 +18,7 @@ const ForceGraph3D = ForceGraph3DDefault as unknown as TypedForceGraph3DCtor;
 import { useSelection } from "@/lib/store";
 import type { EntityType } from "@/lib/schema";
 import type { LineageEdge, LineageGraph, LineageNode } from "@/lib/data/loadLineage";
+import { sideAtEra } from "@/lib/data/force-transitions";
 import { LineageHud } from "./LineageHud";
 
 type Props = {
@@ -83,10 +84,15 @@ const SITH_ORIGINS = new Set<string>([
  * descendant Sith — covers untagged Sidious/Maul/Dooku/Anakin/Malak via the
  * Bane → Plagueis → Sidious → {Maul, Dooku, Anakin, Snoke} chain.
  *
- * Anakin's redemption is famous but, for this view's purpose (color = side
- * during the canonical lineage timeline), we keep him on the Sith branch.
+ * When `era` is provided, any person with a known ForceTransition has their
+ * BFS-derived classification overridden by the era-aware sideAtEra() lookup.
+ * This makes Anakin appear Jedi-blue before -19 BBY, Sith-red between -19 BBY
+ * and 4 ABY, and civilian (redeemed) at 4 ABY+.
+ *
+ * The "force" side (untagged master-chain participant) is preserved for ancient
+ * unaligned masters who have no entry in the transition table.
  */
-function classify(graph: LineageGraph): Map<string, Side> {
+function classify(graph: LineageGraph, era?: number): Map<string, Side> {
   const sith = new Set<string>();
 
   // Seed: explicit faction tags + Sith origin roots.
@@ -127,6 +133,18 @@ function classify(graph: LineageGraph): Map<string, Side> {
 
   const out = new Map<string, Side>();
   for (const n of graph.nodes) {
+    // Era-aware override: if the person has transition data, it takes precedence
+    // over the BFS-derived classification for the current era.
+    if (era !== undefined) {
+      const eraResolved = sideAtEra(n.id, era);
+      if (eraResolved !== null) {
+        // "force" is not a ForceTransition side; map civilian→civilian,
+        // jedi→jedi, sith→sith. The transition table never produces "force".
+        out.set(n.id, eraResolved);
+        continue;
+      }
+    }
+
     if (sith.has(n.id)) {
       out.set(n.id, "sith");
     } else if (n.faction === "jedi_order") {
@@ -266,9 +284,11 @@ export function LineageView({ graph }: Props) {
 
   const selectedId = useSelection((s) => s.entityId);
   const select = useSelection((s) => s.select);
+  const era = useSelection((s) => s.era);
 
-  // Memoize graph derivations so they only run when the JSON changes.
-  const sides = useMemo(() => classify(graph), [graph]);
+  // Memoize graph derivations so they only run when the JSON or era changes.
+  // Era changes re-derive sides so faction colors track the scrubber.
+  const sides = useMemo(() => classify(graph, era), [graph, era]);
   const ancestryIdx = useMemo(() => buildAncestryIndex(graph), [graph]);
   const staticPos = useMemo(() => staticLayout(graph), [graph]);
 
@@ -426,14 +446,21 @@ export function LineageView({ graph }: Props) {
       } catch (err) {
         // Defensive: certain teardown paths in 3d-force-graph throw on
         // already-disposed renderers in HMR; swallow rather than crash.
-        console.warn("[lineage] graph teardown threw", err);
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[lineage] graph teardown threw", err);
+        }
       }
       graphRef.current = null;
       // The lib appends its <canvas> as a child of `el`; ensure cleanup if
       // the destructor missed any wrappers in dev/HMR.
       while (el.firstChild) el.removeChild(el.firstChild);
     };
-  }, [lnodes, llinks, graph.nodes, ancestryIdx, staticPos, select]);
+    // NOTE: lnodes / llinks are intentionally excluded from this dep array.
+    // The graph instance is built once per container; era-driven side changes
+    // are applied by the era-patch effect below, which is cheaper than
+    // destroying and re-creating the whole WebGL scene.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [graph.nodes, graph.edges, ancestryIdx, staticPos, select]);
 
   // External selection (e.g. from the search palette) — center the camera.
   useEffect(() => {
@@ -454,6 +481,40 @@ export function LineageView({ graph }: Props) {
       900
     );
   }, [selectedId]);
+
+  // Era patch: when the era scrubber moves, update each node's `side` in-place
+  // on the existing graph data and call nodeColor() to refresh — no graph
+  // rebuild needed. This keeps the simulation running while colors update live.
+  useEffect(() => {
+    const fg = graphRef.current;
+    if (!fg) return;
+    const data = fg.graphData();
+    let changed = false;
+    for (const raw of data.nodes) {
+      const n = raw as LNode;
+      const next = sides.get(n.id) ?? "civilian";
+      if (n.side !== next) {
+        n.side = next;
+        changed = true;
+      }
+    }
+    if (changed) {
+      // Refresh the color accessor — the lib re-queries it on next render tick.
+      fg.nodeColor((n) => {
+        const accent = readToken("--color-accent", "oklch(0.78 0.13 235)");
+        const alarm = readToken("--color-alarm", "oklch(0.64 0.18 25)");
+        const fgStrong = readToken("--color-fg-strong", "oklch(0.98 0.003 80)");
+        const fgMuted = readToken("--color-fg-muted", "oklch(0.66 0.010 240)");
+        const sideColor: Record<Side, string> = {
+          sith: alarm,
+          jedi: accent,
+          force: fgStrong,
+          civilian: fgMuted
+        };
+        return sideColor[n.side];
+      });
+    }
+  }, [sides]);
 
   // Build the chains shown in the accessibility fallback. We walk forward
   // from each root master, depth-first, so screen readers get a coherent

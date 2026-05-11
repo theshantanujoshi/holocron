@@ -1,6 +1,6 @@
 {
   "dim": 384,
-  "count": 310,
+  "count": 318,
   "modelId": "Xenova/all-MiniLM-L6-v2",
   "ids": [
     "person/1",
@@ -312,7 +312,15 @@
     "game/canon/fallen-order-2019",
     "game/canon/survivor-2023",
     "game/canon/outlaws-2024",
-    "game/non-canon/lego-skywalker-saga-2022"
+    "game/non-canon/lego-skywalker-saga-2022",
+    "planet/sequel-jakku",
+    "planet/sequel-takodana",
+    "planet/sequel-ahch-to",
+    "planet/sequel-crait",
+    "planet/sequel-kef-bir",
+    "planet/sequel-dqar",
+    "planet/sequel-exegol",
+    "planet/sequel-starkiller-base"
   ],
-  "builtAt": "2026-05-07T19:54:56.035Z"
+  "builtAt": "2026-05-10T10:32:30.163Z"
 }

@@ -13,6 +13,7 @@ import { Planet } from "./Planet";
 import { SectorGrid } from "./SectorGrid";
 import { RouteOverlay } from "./RouteOverlay";
 import { ShipVoyage } from "./ShipVoyage";
+import { ShipTraffic } from "./ShipTraffic";
 import { PlotRouteHud } from "./PlotRouteHud";
 import { ConnectionWeb } from "./ConnectionWeb";
 import { HolographicFigure } from "./HolographicFigure";
@@ -22,6 +23,7 @@ import { AtlasMode } from "./AtlasMode";
 import { findRoute } from "@/lib/data/lane-graph";
 import { computeVoyage } from "@/lib/data/ship-voyage";
 import { resolveAnchor } from "@/lib/data/relationGeometry";
+import { sideAtEra } from "@/lib/data/force-transitions";
 import { useSelection } from "@/lib/store";
 
 type Props = {
@@ -38,7 +40,26 @@ const SITH_ORIGINS = new Set([
   "person/darth-revan"
 ]);
 
-function classifySide(entityId: string, lineage: LineageGraph | null): ForceSide {
+/**
+ * Classify a person's Force alignment for use in GalaxyCanvas.
+ *
+ * When `era` is provided, the function first consults the declarative
+ * FORCE_TRANSITIONS table via sideAtEra(). If the person has a known
+ * transition arc, that result is returned directly. Otherwise the function
+ * falls back to the BFS-from-Sith-origins algorithm.
+ */
+function classifySide(
+  entityId: string,
+  lineage: LineageGraph | null,
+  era?: number
+): ForceSide {
+  // Era-aware override takes precedence over BFS when the person has
+  // known transition data.
+  if (era !== undefined) {
+    const eraResolved = sideAtEra(entityId, era);
+    if (eraResolved !== null) return eraResolved;
+  }
+
   if (!lineage) return "civilian";
   const node = lineage.nodes.find((n) => n.id === entityId);
   if (!node) return "civilian";
@@ -109,6 +130,7 @@ export function GalaxyCanvas({
           <SectorGrid size={520} divisions={14} />
           <PlanetField planets={planets} />
           <RouteScene planets={planets} lanes={lanes} />
+          <TrafficLayer lanes={lanes} />
           <ConnectionLayer entities={entities} planets={planets} />
           <VoyageLayer entities={entities} planets={planets} />
           <SelectionVisuals entities={entities} planets={planets} lineage={lineage} />
@@ -190,15 +212,16 @@ function SelectionVisuals({
 }) {
   const selectedId = useSelection((s) => s.entityId);
   const atlasMode = useSelection((s) => s.atlasMode);
+  const era = useSelection((s) => s.era);
 
   const { entity, anchor, side } = useMemo(() => {
     if (!selectedId) return { entity: null, anchor: null, side: "civilian" as ForceSide };
     const e = entities.find((ent) => ent.id === selectedId) ?? null;
     if (!e) return { entity: null, anchor: null, side: "civilian" as ForceSide };
     const a = resolveAnchor(e, entities, planets);
-    const s = e.type === "person" ? classifySide(e.id, lineage) : "civilian";
+    const s = e.type === "person" ? classifySide(e.id, lineage, era) : "civilian";
     return { entity: e, anchor: a, side: s };
-  }, [selectedId, entities, planets, lineage]);
+  }, [selectedId, entities, planets, lineage, era]);
 
   if (!entity || !anchor) return null;
 
@@ -215,6 +238,7 @@ function SelectionVisuals({
           scale={2.4}
           intensity={1}
           side={side}
+          era={era}
         />
       )}
       {entity.type === "person" && side !== "civilian" && (
@@ -246,6 +270,18 @@ function AtlasLayer({
       enabled={enabled}
     />
   );
+}
+
+/**
+ * Subscribes to the global era scrubber and renders ambient ship traffic on
+ * the hyperspace lane network. Era-aware: only ship classes whose
+ * [activeFrom, activeTo] window includes the current era are spawned.
+ * No-op when there are no lanes.
+ */
+function TrafficLayer({ lanes }: { lanes: Hyperlane[] }) {
+  const era = useSelection((s) => s.era);
+  if (!lanes.length) return null;
+  return <ShipTraffic lanes={lanes} era={era} />;
 }
 
 function RouteScene({

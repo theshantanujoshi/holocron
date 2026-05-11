@@ -8,3 +8,9 @@ out
 data/build/planets.parzivail.json
 data/.cache
 .vercel
+.claude
+# Remotion render outputs (large, regenerated on demand)
+remotion/out
+remotion/demo.mp4
+remotion/demo.gif
+remotion/demo.webm

@@ -1,0 +1,26 @@
+# Cloudflare Pages headers — tuned for the Holocron static export.
+# The site is fully static, so aggressive caching is safe; we only
+# differentiate freshness for HTML (re-deploys) vs immutable hashed assets.
+
+# Hashed Next.js bundles — content-addressed, immutable.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Precomputed search index + entity data sidecars.
+# Rebuilt only on `npm run build:embeddings` runs; safe to cache hard.
+/data/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
+# Wikipedia thumbnails for planets and people.
+/images/*
+  Cache-Control: public, max-age=604800
+
+# Fonts — Geist self-hosted via next/font.
+/_next/static/media/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML pages — short cache so deploys propagate quickly worldwide.
+/*
+  Cache-Control: public, max-age=300, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
