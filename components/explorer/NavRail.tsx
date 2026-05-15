@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import {
   GlobeHemisphereWest,
   Clock,
@@ -15,7 +15,6 @@ import { useSelection, type ViewMode } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { AtlasToggle } from "./AtlasToggle";
 import { AudioToggle } from "./AudioToggle";
-import { AnimatePresence } from "motion/react";
 import { STORIES } from "@/lib/data/stories";
 
 const STORY_ABBRS: Record<string, string> = {
