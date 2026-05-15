@@ -73,7 +73,7 @@ type SelectionActions = {
   clearRoute: () => void;
   reverseRoute: () => void;
   // Story Mode
-  playStory: (id: string) => void;
+  playStory: (id: string, initialBeat?: number) => void;
   pauseStory: () => void;
   resumeStory: () => void;
   setStoryBeat: (i: number) => void;
@@ -178,9 +178,9 @@ export const useSelection = create<SelectionState & SelectionActions>((set) => (
     }),
 
   // Story Mode ──────────────────────────────────────────────────────────────
-  playStory: (id) =>
+  playStory: (id, initialBeat = -1) =>
     set({
-      story: { playingStoryId: id, beatIndex: -1, paused: false },
+      story: { playingStoryId: id, beatIndex: initialBeat, paused: false },
       cinematic: { activeId: null, fired: new Set<string>() }
     }),
   pauseStory: () =>
